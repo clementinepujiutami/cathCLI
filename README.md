@@ -31,8 +31,10 @@
 
 ## Install
 
+Requires [Node.js](https://nodejs.org) ≥ 18.
+
 ```bash
-npm install -g cathcli
+npm install -g github:clementinepujiutami/cathCLI
 ```
 
 Then just run:

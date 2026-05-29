@@ -1,0 +1,131 @@
+"use strict";
+// BibleGet I/O — Catholic Bible API (Apache-2.0, built by a Catholic priest)
+// https://query.bibleget.io  |  No API key — appid is just your app name
+// Supports NABRE, Douay-Rheims, Nova Vulgata, and all deuterocanonical books
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getChapter = getChapter;
+exports.getVerse = getVerse;
+exports.getRandomVerse = getRandomVerse;
+exports.searchVerses = searchVerses;
+const node_fetch_1 = __importDefault(require("node-fetch"));
+const db_1 = require("../db");
+const BASE = 'https://query.bibleget.io/v3/';
+const APP_ID = 'cathCLI';
+const VERSION = 'NABRE';
+async function bibleget(query) {
+    const url = `${BASE}?query=${encodeURIComponent(query)}&version=${VERSION}&appid=${APP_ID}&return=json`;
+    const res = await (0, node_fetch_1.default)(url);
+    if (!res.ok)
+        throw new Error(`BibleGet error: HTTP ${res.status}`);
+    const data = await res.json();
+    if (data.errors?.length) {
+        const errs = data.errors;
+        throw new Error(`BibleGet: ${errs.join(', ')}`);
+    }
+    return data.results;
+}
+function toVerse(r) {
+    // Strip XML/HTML tags (like <pof> or <poi>) returned by the BibleGet API
+    const cleanText = r.text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    return {
+        book: r.book,
+        bookabbrev: r.bookabbrev,
+        chapter: r.chapter,
+        verse: parseInt(r.verse, 10),
+        text: cleanText,
+        version: r.version,
+    };
+}
+// ── Public API ────────────────────────────────────────────────────────────────
+async function getChapter(bookAbbr, chapter) {
+    const ref = `${bookAbbr}${chapter}`;
+    const hit = db_1.cache.getChapter(ref);
+    if (hit)
+        return hit;
+    const results = await bibleget(`${bookAbbr}${chapter}`);
+    if (!results.length)
+        throw new Error(`No results for ${bookAbbr} ${chapter}`);
+    const verses = results.map(toVerse);
+    db_1.cache.setChapter(ref, verses);
+    return verses;
+}
+async function getVerse(bookAbbr, chapter, verse) {
+    const ref = `${bookAbbr}${chapter}:${verse}`;
+    const hit = db_1.cache.getVerse(ref);
+    if (hit)
+        return hit;
+    const results = await bibleget(ref);
+    if (!results.length)
+        throw new Error(`Verse not found: ${ref}`);
+    const v = toVerse(results[0]);
+    db_1.cache.setVerse(ref, v);
+    return v;
+}
+// Random from a curated pool of beloved Catholic verses
+const POOL = [
+    'Jn3:16', 'Jn14:6', 'Rom8:28', 'Ps23:1', 'Phil4:13',
+    'Jer29:11', 'Isa40:31', 'Mt5:3', 'Mt11:28', 'Rom5:8',
+    'Gal2:20', 'Eph2:8', 'Prv3:5', 'Ps46:1', 'Rev21:4',
+    'Jn15:13', 'Lk1:37', '1Cor13:4', 'Deut31:6', 'Ps118:24',
+    'Sir2:6', 'Wis3:1', 'Tob4:16', 'Ps91:11', 'Isa41:10',
+    '1Pe5:7', 'Mt28:20', 'Col3:23', 'Heb11:1', 'Jn11:25',
+];
+async function getRandomVerse() {
+    const query = POOL[Math.floor(Math.random() * POOL.length)];
+    const results = await bibleget(query);
+    if (!results.length)
+        throw new Error('Could not fetch random verse');
+    return toVerse(results[0]);
+}
+async function searchVerses(keyword) {
+    // BibleGet doesn't have keyword search — use passage search with common refs
+    // For keyword search we use the local cache / offline approach
+    const db = (await Promise.resolve().then(() => __importStar(require('../db')))).default;
+    const rows = db.prepare("SELECT data FROM verses WHERE data LIKE ? LIMIT 20")
+        .all(`%${keyword}%`);
+    if (rows.length) {
+        return rows
+            .flatMap(r => {
+            const v = JSON.parse(r.data);
+            return v.text.toLowerCase().includes(keyword.toLowerCase()) ? [v] : [];
+        });
+    }
+    return [];
+}
+//# sourceMappingURL=bible.js.map
