@@ -87,34 +87,66 @@ export function sectionHeader(title: string, icon = '✝'): string {
   return `\n${rule}\n${line}\n${rule}\n`;
 }
 
+// ── Box drawing (no external dep — works in standalone binary) ───────────────
+const ANSI_RE = /\x1B\[[0-9;]*[mGKHF]/g;
+const visLen  = (s: string) => s.replace(ANSI_RE, '').length;
+
+function drawBox(
+  lines: string[],
+  borderColor: (s: string) => string,
+  double = false
+): string {
+  const tl = double ? '╔' : '╭';
+  const tr = double ? '╗' : '╮';
+  const bl = double ? '╚' : '╰';
+  const br = double ? '╝' : '╯';
+  const hz = double ? '═' : '─';
+  const vt = double ? '║' : '│';
+
+  const termCols = process.stdout.columns ?? 80;
+  const maxContent = Math.min(Math.max(...lines.map(visLen)), termCols - 8);
+  const innerW = maxContent + 4; // 2 spaces padding each side
+
+  const bc    = borderColor;
+  const top   = bc(tl + hz.repeat(innerW) + tr);
+  const blank = bc(vt) + ' '.repeat(innerW) + bc(vt);
+  const body  = lines.map(l =>
+    bc(vt) + '  ' + l + ' '.repeat(Math.max(0, maxContent - visLen(l)) + 2) + bc(vt)
+  );
+  const bot   = bc(bl + hz.repeat(innerW) + br);
+
+  const m = '  ';
+  return ['\n', m + top, m + blank, ...body.map(l => m + l), m + blank, m + bot, ''].join('\n');
+}
+
+function wordWrap(text: string, maxW: number): string[] {
+  const out: string[] = [];
+  for (const paragraph of text.split('\n')) {
+    if (!paragraph.trim()) { out.push(''); continue; }
+    const words = paragraph.split(' ');
+    let line = '';
+    for (const w of words) {
+      if (!line) { line = w; }
+      else if (line.length + 1 + w.length <= maxW) { line += ' ' + w; }
+      else { out.push(line); line = w; }
+    }
+    if (line) out.push(line);
+  }
+  return out;
+}
+
 // ── Verse box ────────────────────────────────────────────────────────────────
 export function verseBox(ref: string, text: string): string {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const boxen = require('boxen').default ?? require('boxen');
-  return boxen(
-    C.gold(`✝  ${ref}\n\n`) + C.cream(text),
-    {
-      padding: 1,
-      margin: { top: 1, bottom: 1, left: 2, right: 2 },
-      borderStyle: 'round',
-      borderColor: '#F5C542',
-    }
-  );
+  const maxW = Math.min((process.stdout.columns ?? 80) - 10, 70);
+  const lines = [C.gold(`✝  ${ref}`), '', ...wordWrap(text, maxW).map(l => C.cream(l))];
+  return drawBox(lines, C.gold, false);
 }
 
 // ── Prayer box ───────────────────────────────────────────────────────────────
 export function prayerBox(title: string, text: string): string {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const boxen = require('boxen').default ?? require('boxen');
-  return boxen(
-    C.gold(`🙏  ${title}\n\n`) + C.cream(text),
-    {
-      padding: 1,
-      margin: { top: 1, bottom: 1, left: 2, right: 2 },
-      borderStyle: 'double',
-      borderColor: '#87BEEA',
-    }
-  );
+  const maxW = Math.min((process.stdout.columns ?? 80) - 10, 70);
+  const lines = [C.gold(`🙏  ${title}`), '', ...wordWrap(text, maxW).map(l => C.cream(l))];
+  return drawBox(lines, C.sky, true);
 }
 
 // ── Spinner helper text ──────────────────────────────────────────────────────

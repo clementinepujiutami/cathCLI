@@ -31,13 +31,29 @@
 
 ## Install
 
-Requires [Node.js](https://nodejs.org) ≥ 18 and [pnpm](https://pnpm.io).
+### Script (recommended — handles Node.js + pnpm automatically)
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/clementinepujiutami/cathCLI/main/install.sh | bash
+```
+
+### Standalone binary (no Node.js required)
+
+Download the prebuilt binary from [Releases](https://github.com/clementinepujiutami/cathCLI/releases/latest):
+
+```bash
+curl -LO https://github.com/clementinepujiutami/cathCLI/releases/latest/download/cath-linux
+chmod +x cath-linux
+sudo mv cath-linux /usr/local/bin/cath
+```
+
+### pnpm (manual)
 
 ```bash
 pnpm install -g github:clementinepujiutami/cathCLI
 ```
 
-Then just run:
+Then run:
 
 ```bash
 cath

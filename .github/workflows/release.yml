@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  binary:
+    name: Build Linux binary
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build TypeScript
+        run: pnpm build
+
+      - name: Package binary
+        run: node_modules/.bin/pkg dist/index.js --targets node22-linux-x64 --output bin/cath-linux
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: bin/cath-linux
+          generate_release_notes: true
+          body: |
+            ## Install
+
+            **Script (recommended):**
+            ```bash
+            curl -fsSL https://raw.githubusercontent.com/clementinepujiutami/cathCLI/main/install.sh | bash
+            ```
+
+            **Standalone binary (no Node.js needed):**
+            ```bash
+            curl -LO https://github.com/clementinepujiutami/cathCLI/releases/latest/download/cath-linux
+            chmod +x cath-linux
+            sudo mv cath-linux /usr/local/bin/cath
+            ```
+
+            **pnpm:**
+            ```bash
+            pnpm install -g github:clementinepujiutami/cathCLI
+            ```

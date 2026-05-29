@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// Suppress Node.js internal deprecation warnings (punycode from cheerio)
+process.removeAllListeners('warning');
 import { Command } from 'commander';
 import { banner } from './ui/art';
 import { soundStartup } from './ui/sound';

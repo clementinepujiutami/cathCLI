@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+// Suppress Node.js internal deprecation warnings (punycode from cheerio)
+process.removeAllListeners('warning');
 const commander_1 = require("commander");
 const art_1 = require("./ui/art");
 const sound_1 = require("./ui/sound");
