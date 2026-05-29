@@ -364,50 +364,115 @@ That others may become holier than I, provided that I may become as holy as I sh
     id: 'holy-rosary',
     title: 'The Holy Rosary',
     category: 'rosary',
-    text: `How to Pray the Rosary:
-1. Make the Sign of the Cross and say the "Apostles' Creed".
-2. Say the "Our Father".
-3. Say three "Hail Marys" for an increase in faith, hope, and charity.
-4. Say the "Glory Be".
-5. Announce the First Mystery and say the "Our Father".
-6. Say ten "Hail Marys" while meditating on the Mystery.
-7. Say the "Glory Be" and the "Fatima Prayer":
-   "O my Jesus, forgive us our sins, save us from the fires of hell, lead all souls to heaven, especially those in most need of Thy mercy."
-8. Repeat steps 5-7 for the Second, Third, Fourth, and Fifth Mysteries.
-9. After the five decades, say the "Hail Holy Queen" and the concluding prayer:
-   "O God, whose only begotten Son, by His life, death, and resurrection, has purchased for us the rewards of eternal life, grant, we beseech Thee, that meditating upon these mysteries of the Most Holy Rosary of the Blessed Virgin Mary, we may imitate what they contain and obtain what they promise, through the same Christ our Lord. Amen."
+    text: `✝ OPENING PRAYERS
 
----
+Sign of the Cross:
+In the name of the Father, and of the Son, and of the Holy Spirit. Amen.
 
-THE MYSTERIES OF THE ROSARY:
+Apostles' Creed:
+I believe in God, the Father almighty, Creator of heaven and earth,
+and in Jesus Christ, his only Son, our Lord, who was conceived by the
+Holy Spirit, born of the Virgin Mary, suffered under Pontius Pilate,
+was crucified, died and was buried; he descended into hell; on the third
+day he rose again from the dead; he ascended into heaven, and is seated
+at the right hand of God the Father almighty; from there he will come to
+judge the living and the dead. I believe in the Holy Spirit, the holy
+catholic Church, the communion of saints, the forgiveness of sins,
+the resurrection of the body, and life everlasting. Amen.
 
-[Joyful Mysteries] (Prayed on Mondays and Saturdays)
-1. The Annunciation
-2. The Visitation
-3. The Nativity
-4. The Presentation in the Temple
-5. The Finding in the Temple
+Our Father:
+Our Father, Who art in heaven, hallowed be Thy name; Thy kingdom come;
+Thy will be done on earth as it is in heaven. Give us this day our daily
+bread; and forgive us our trespasses as we forgive those who trespass
+against us; and lead us not into temptation, but deliver us from evil. Amen.
 
-[Sorrowful Mysteries] (Prayed on Tuesdays and Fridays)
-1. The Agony in the Garden
-2. The Scourging at the Pillar
-3. The Crowning with Thorns
-4. The Carrying of the Cross
-5. The Crucifixion and Death of Our Lord
+3 Hail Marys (for an increase in Faith, Hope, and Charity):
+Hail Mary, full of grace. The Lord is with thee. Blessed art thou amongst
+women, and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of
+God, pray for us sinners, now and at the hour of our death. Amen. (×3)
 
-[Glorious Mysteries] (Prayed on Wednesdays and Sundays)
-1. The Resurrection
-2. The Ascension
-3. The Descent of the Holy Spirit
-4. The Assumption of Mary
-5. The Coronation of Mary as Queen of Heaven and Earth
+Glory Be:
+Glory be to the Father, and to the Son, and to the Holy Spirit. As it was
+in the beginning, is now, and ever shall be, world without end. Amen.
 
-[Luminous Mysteries] (Prayed on Thursdays)
-1. The Baptism of Christ in the Jordan
-2. The Wedding at Cana
-3. The Proclamation of the Kingdom
-4. The Transfiguration
-5. The Institution of the Eucharist`
+─────────────────────────────────────────────
+
+✝ FOR EACH DECADE (repeat 5 times):
+
+  1. Announce the Mystery and briefly meditate on it.
+
+  2. Our Father:
+     Our Father, Who art in heaven, hallowed be Thy name; Thy kingdom come;
+     Thy will be done on earth as it is in heaven. Give us this day our daily
+     bread; and forgive us our trespasses as we forgive those who trespass
+     against us; and lead us not into temptation, but deliver us from evil. Amen.
+
+  3. Hail Mary (×10):
+     Hail Mary, full of grace. The Lord is with thee. Blessed art thou amongst
+     women, and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of
+     God, pray for us sinners, now and at the hour of our death. Amen.
+
+  4. Glory Be:
+     Glory be to the Father, and to the Son, and to the Holy Spirit. As it was
+     in the beginning, is now, and ever shall be, world without end. Amen.
+
+  5. Fatima Prayer:
+     O my Jesus, forgive us our sins, save us from the fires of hell, lead all
+     souls to heaven, especially those in most need of Thy mercy.
+
+─────────────────────────────────────────────
+
+✝ CLOSING PRAYERS
+
+Hail Holy Queen (Salve Regina):
+Hail, holy Queen, Mother of Mercy, our life, our sweetness and our hope.
+To thee do we cry, poor banished children of Eve. To thee do we send up our
+sighs, mourning and weeping in this valley of tears. Turn then, most gracious
+advocate, thine eyes of mercy toward us, and after this our exile, show unto
+us the blessed fruit of thy womb, Jesus. O clement, O loving, O sweet Virgin Mary!
+Pray for us, O holy Mother of God, that we may be made worthy of the promises of Christ.
+
+Concluding Prayer:
+O God, whose only begotten Son, by His life, death, and resurrection, has
+purchased for us the rewards of eternal life, grant, we beseech Thee, that
+meditating upon these mysteries of the Most Holy Rosary of the Blessed Virgin
+Mary, we may imitate what they contain and obtain what they promise, through
+the same Christ our Lord. Amen.
+
+Sign of the Cross:
+In the name of the Father, and of the Son, and of the Holy Spirit. Amen.
+
+─────────────────────────────────────────────
+
+✝ THE MYSTERIES
+
+[Joyful Mysteries] — Mondays & Saturdays
+  1st Decade · The Annunciation (Luke 1:26–38)
+  2nd Decade · The Visitation (Luke 1:39–56)
+  3rd Decade · The Nativity (Luke 2:1–20)
+  4th Decade · The Presentation in the Temple (Luke 2:22–38)
+  5th Decade · The Finding in the Temple (Luke 2:41–52)
+
+[Luminous Mysteries] — Thursdays
+  1st Decade · The Baptism of Christ in the Jordan (Matthew 3:13–17)
+  2nd Decade · The Wedding at Cana (John 2:1–11)
+  3rd Decade · The Proclamation of the Kingdom (Mark 1:14–15)
+  4th Decade · The Transfiguration (Luke 9:28–36)
+  5th Decade · The Institution of the Eucharist (Matthew 26:26–28)
+
+[Sorrowful Mysteries] — Tuesdays & Fridays
+  1st Decade · The Agony in the Garden (Luke 22:39–46)
+  2nd Decade · The Scourging at the Pillar (John 19:1)
+  3rd Decade · The Crowning with Thorns (Matthew 27:27–31)
+  4th Decade · The Carrying of the Cross (John 19:17)
+  5th Decade · The Crucifixion and Death of Our Lord (Luke 23:33–46)
+
+[Glorious Mysteries] — Wednesdays & Sundays
+  1st Decade · The Resurrection (Mark 16:1–8)
+  2nd Decade · The Ascension (Acts 1:6–11)
+  3rd Decade · The Descent of the Holy Spirit (Acts 2:1–4)
+  4th Decade · The Assumption of Mary
+  5th Decade · The Coronation of Mary as Queen of Heaven and Earth`
   }
 ];
 
