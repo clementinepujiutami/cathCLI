@@ -4,61 +4,87 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cache = exports.DB_PATH = exports.DATA_DIR = void 0;
-// Local SQLite — caches BibleGet I/O responses offline after first fetch
-const better_sqlite3_1 = __importDefault(require("better-sqlite3"));
 const path_1 = __importDefault(require("path"));
 const os_1 = __importDefault(require("os"));
 const fs_1 = __importDefault(require("fs"));
 exports.DATA_DIR = path_1.default.join(os_1.default.homedir(), '.cathcli');
 exports.DB_PATH = path_1.default.join(exports.DATA_DIR, 'cathcli.db');
-if (!fs_1.default.existsSync(exports.DATA_DIR))
-    fs_1.default.mkdirSync(exports.DATA_DIR, { recursive: true });
-const db = new better_sqlite3_1.default(exports.DB_PATH);
-db.pragma('journal_mode = WAL');
-db.exec(`
-  CREATE TABLE IF NOT EXISTS chapters (
-    ref  TEXT PRIMARY KEY,
-    data TEXT NOT NULL,
-    at   INTEGER NOT NULL
-  );
-  CREATE TABLE IF NOT EXISTS verses (
-    ref  TEXT PRIMARY KEY,
-    data TEXT NOT NULL,
-    at   INTEGER NOT NULL
-  );
-  CREATE TABLE IF NOT EXISTS prayers (
-    name TEXT PRIMARY KEY,
-    title TEXT NOT NULL,
-    text TEXT NOT NULL,
-    at   INTEGER NOT NULL
-  );
-`);
 const TTL = 30 * 24 * 60 * 60 * 1000; // 30 days
+// Try to load better-sqlite3 — gracefully degrade to no-cache if unavailable
+let db = null;
+try {
+    if (!fs_1.default.existsSync(exports.DATA_DIR))
+        fs_1.default.mkdirSync(exports.DATA_DIR, { recursive: true });
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const Database = require('better-sqlite3');
+    db = new Database(exports.DB_PATH);
+    db.pragma('journal_mode = WAL');
+    db.exec(`
+    CREATE TABLE IF NOT EXISTS chapters (
+      ref  TEXT PRIMARY KEY,
+      data TEXT NOT NULL,
+      at   INTEGER NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS verses (
+      ref  TEXT PRIMARY KEY,
+      data TEXT NOT NULL,
+      at   INTEGER NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS prayers (
+      name TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      text TEXT NOT NULL,
+      at   INTEGER NOT NULL
+    );
+  `);
+}
+catch {
+    // Native module not compiled — caching disabled, API fetched every time
+    db = null;
+}
 exports.cache = {
     getChapter: (ref) => {
+        if (!db)
+            return null;
         const row = db.prepare('SELECT data,at FROM chapters WHERE ref=?').get(ref);
         if (!row || Date.now() - row.at > TTL)
             return null;
         return JSON.parse(row.data);
     },
-    setChapter: (ref, data) => db.prepare('INSERT OR REPLACE INTO chapters(ref,data,at) VALUES(?,?,?)')
-        .run(ref, JSON.stringify(data), Date.now()),
+    setChapter: (ref, data) => {
+        if (!db)
+            return;
+        db.prepare('INSERT OR REPLACE INTO chapters(ref,data,at) VALUES(?,?,?)')
+            .run(ref, JSON.stringify(data), Date.now());
+    },
     getVerse: (ref) => {
+        if (!db)
+            return null;
         const row = db.prepare('SELECT data,at FROM verses WHERE ref=?').get(ref);
         if (!row || Date.now() - row.at > TTL)
             return null;
         return JSON.parse(row.data);
     },
-    setVerse: (ref, data) => db.prepare('INSERT OR REPLACE INTO verses(ref,data,at) VALUES(?,?,?)')
-        .run(ref, JSON.stringify(data), Date.now()),
+    setVerse: (ref, data) => {
+        if (!db)
+            return;
+        db.prepare('INSERT OR REPLACE INTO verses(ref,data,at) VALUES(?,?,?)')
+            .run(ref, JSON.stringify(data), Date.now());
+    },
     getPrayer: (name) => {
+        if (!db)
+            return null;
         const row = db.prepare('SELECT title,text,at FROM prayers WHERE name=?').get(name);
         if (!row || Date.now() - row.at > TTL)
             return null;
         return { title: row.title, text: row.text };
     },
-    setPrayer: (name, title, text) => db.prepare('INSERT OR REPLACE INTO prayers(name,title,text,at) VALUES(?,?,?,?)')
-        .run(name, title, text, Date.now()),
+    setPrayer: (name, title, text) => {
+        if (!db)
+            return;
+        db.prepare('INSERT OR REPLACE INTO prayers(name,title,text,at) VALUES(?,?,?,?)')
+            .run(name, title, text, Date.now());
+    },
 };
 exports.default = db;
 //# sourceMappingURL=db.js.map

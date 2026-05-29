@@ -107,18 +107,14 @@ export async function getRandomVerse(): Promise<BibleVerse> {
 }
 
 export async function searchVerses(keyword: string): Promise<BibleVerse[]> {
-  // BibleGet doesn't have keyword search — use passage search with common refs
-  // For keyword search we use the local cache / offline approach
   const db = (await import('../db')).default;
+  if (!db) return [];
+
   const rows = db.prepare("SELECT data FROM verses WHERE data LIKE ? LIMIT 20")
     .all(`%${keyword}%`) as { data: string }[];
 
-  if (rows.length) {
-    return rows
-      .flatMap(r => {
-        const v = JSON.parse(r.data) as BibleVerse;
-        return v.text.toLowerCase().includes(keyword.toLowerCase()) ? [v] : [];
-      });
-  }
-  return [];
+  return rows.flatMap(r => {
+    const v = JSON.parse(r.data) as BibleVerse;
+    return v.text.toLowerCase().includes(keyword.toLowerCase()) ? [v] : [];
+  });
 }

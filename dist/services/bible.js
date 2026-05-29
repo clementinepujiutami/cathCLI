@@ -114,18 +114,14 @@ async function getRandomVerse() {
     return toVerse(results[0]);
 }
 async function searchVerses(keyword) {
-    // BibleGet doesn't have keyword search — use passage search with common refs
-    // For keyword search we use the local cache / offline approach
     const db = (await Promise.resolve().then(() => __importStar(require('../db')))).default;
+    if (!db)
+        return [];
     const rows = db.prepare("SELECT data FROM verses WHERE data LIKE ? LIMIT 20")
         .all(`%${keyword}%`);
-    if (rows.length) {
-        return rows
-            .flatMap(r => {
-            const v = JSON.parse(r.data);
-            return v.text.toLowerCase().includes(keyword.toLowerCase()) ? [v] : [];
-        });
-    }
-    return [];
+    return rows.flatMap(r => {
+        const v = JSON.parse(r.data);
+        return v.text.toLowerCase().includes(keyword.toLowerCase()) ? [v] : [];
+    });
 }
 //# sourceMappingURL=bible.js.map
