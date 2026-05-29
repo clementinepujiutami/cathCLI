@@ -1,37 +1,53 @@
 {
   "name": "cathcli",
   "version": "1.0.0",
-  "description": "A CLI for the Holy Bible (Catholic Canon) and Catholic Prayers",
+  "description": "A CLI for the Holy Bible (Catholic Canon — NABRE) and Catholic Prayers",
   "main": "dist/index.js",
   "bin": {
     "cath": "./dist/index.js"
   },
+  "files": [
+    "dist/",
+    "README.md"
+  ],
   "scripts": {
+    "prebuild": "rm -rf dist",
     "build": "tsc",
+    "prepare": "pnpm run build",
     "dev": "ts-node src/index.ts",
-    "start": "node dist/index.js",
-    "prebuild": "rm -rf dist"
+    "start": "node dist/index.js"
   },
-  "keywords": ["bible", "catholic", "prayers", "cli", "vatican"],
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/clementinepujiutami/cathCLI.git"
+  },
+  "keywords": [
+    "bible",
+    "catholic",
+    "prayers",
+    "cli",
+    "vatican",
+    "nabre",
+    "rosary",
+    "scripture"
+  ],
   "author": "Clementine Puji Utami",
   "license": "MIT",
   "dependencies": {
-    "better-sqlite3": "^9.4.3",
+    "better-sqlite3": "^12.10.0",
     "boxen": "^7.1.1",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0",
     "commander": "^12.0.0",
-    "figlet": "^1.7.0",
+    "inquirer": "^8.2.6",
     "node-fetch": "^2.7.0",
-    "ora": "^5.4.1",
-    "inquirer": "^8.2.6"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": ["better-sqlite3"]
+    "ora": "^5.4.1"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.8",
-    "@types/figlet": "^1.5.8",
     "@types/inquirer": "^8.2.10",
     "@types/node": "^20.11.5",
     "@types/node-fetch": "^2.6.11",

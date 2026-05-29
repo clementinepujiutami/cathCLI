@@ -49,12 +49,14 @@ async function bibleget(query: string): Promise<BibleGetResult[]> {
 }
 
 function toVerse(r: BibleGetResult): BibleVerse {
+  // Strip XML/HTML tags (like <pof> or <poi>) returned by the BibleGet API
+  const cleanText = r.text.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
   return {
     book:       r.book,
     bookabbrev: r.bookabbrev,
     chapter:    r.chapter,
     verse:      parseInt(r.verse, 10),
-    text:       r.text.trim(),
+    text:       cleanText,
     version:    r.version,
   };
 }

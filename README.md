@@ -1,47 +1,126 @@
-# ✝️ cathCLI
+<div align="center">
 
-> A personal CLI for the Holy Bible (Catholic Canon — NABRE) and Catholic Prayers
+```
+██            ██
+██████      ██████
+██████████████████
+██████████████████
+██  ████████  ████
+██████  ██  ██████
+██████████████████
+  ██████████████
+██████████████████
+████████████████████
+████████████████  ██
+████        ████  ██
+████        ██████
+██            ██
+```
 
-## Features
+# cathCLI
 
-- 📖 **Holy Bible** — New American Bible Revised Edition (NABRE), full 73-book Catholic canon
-- ✝️ **Deuterocanonical books** — Tobit, Judith, Wisdom, Sirach, Baruch, 1 & 2 Maccabees
-- 🙏 **Catholic Prayers** — Rosary, Divine Mercy, Litanies, Novenas & more
-- 🔍 **Search** — keyword search across all verses
-- 🎲 **Random verse** — daily inspiration
-- 💾 **Offline cache** — fetched verses saved locally in ~/.cathcli/
+**cat-holic** · Holy Bible & Catholic Prayers in your terminal
 
-## Bible Source
+[![npm version](https://img.shields.io/npm/v/cathcli)](https://www.npmjs.com/package/cathcli)
+[![license](https://img.shields.io/npm/l/cathcli)](LICENSE)
+[![node](https://img.shields.io/node/v/cathcli)](package.json)
 
-**BibleGet I/O** (https://query.bibleget.io) — Catholic Bible API built by a Catholic priest
-License: Apache-2.0 | Translation: NABRE (© USCCB, used with permission)
-No API key required — free for personal use.
+</div>
 
-## Prayers Source
+---
 
-mycatholic.life/catholic-prayers
-
-## Installation
+## Install
 
 ```bash
-pnpm install
-pnpm build
-node dist/index.js
+npm install -g cathcli
 ```
+
+Then just run:
+
+```bash
+cath
+```
+
+---
 
 ## Commands
 
 ```
-cath                          # show banner + help
-cath read <book> <chapter>    # e.g. cath read jn 3
-cath verse <book> <ch:v>      # e.g. cath verse jn 3:16
-cath books                    # list all 73 books
-cath pray                     # browse Catholic prayers
-cath pray "hail mary"         # show a specific prayer
-cath search <keyword>         # search verses
-cath random                   # random verse
+cath                           show banner + help
+cath read <book> <chapter>     read a Bible chapter
+cath verse <book> <ch:v>       look up a single verse
+cath books                     list all 73 Catholic books
+cath pray                      browse prayers interactively
+cath pray "<name>"             show a specific prayer
+cath random                    random verse from a curated pool
+cath search <keyword>          search cached verses by keyword
 ```
+
+### Examples
+
+```bash
+cath read jn 3               # John chapter 3 (NABRE)
+cath verse ps 23:1           # Psalms 23:1
+cath verse 1mac 2:1          # 1 Maccabees 2:1 (deuterocanonical)
+cath pray "hail mary"        # Hail Mary
+cath pray "st michael"       # Prayer to Saint Michael
+cath pray                    # pick from categories interactively
+cath search mercy            # search all cached verses for "mercy"
+cath random                  # surprise yourself
+```
+
+---
+
+## Features
+
+- **Full Catholic canon** — all 73 books including the 7 deuterocanonical books (Tobit, Judith, Wisdom, Sirach, Baruch, 1 & 2 Maccabees)
+- **NABRE translation** — New American Bible Revised Edition (© USCCB)
+- **Built-in prayers** — Our Father, Hail Mary, Rosary, Divine Mercy Chaplet, Litany of Humility, and more
+- **Offline cache** — verses are saved locally in `~/.cathcli/` after first fetch; no repeated API calls
+- **No API key** — powered by [BibleGet I/O](https://query.bibleget.io), a free Catholic Bible API built by a Catholic priest
+
+---
+
+## Book IDs
+
+Use the short ID when reading:
+
+| ID | Book | ID | Book |
+|---|---|---|---|
+| `gen` | Genesis | `mt` | Matthew |
+| `ex` | Exodus | `mk` | Mark |
+| `ps` | Psalms | `lk` | Luke |
+| `prov` | Proverbs | `jn` | John |
+| `isa` | Isaiah | `rom` | Romans |
+| `wis` | Wisdom | `1cor` | 1 Corinthians |
+| `sir` | Sirach | `rev` | Revelation |
+| `1mac` | 1 Maccabees | `tob` | Tobit |
+
+Run `cath books` to see all 73.
+
+---
+
+## Data Sources
+
+| Content | Source | License |
+|---|---|---|
+| Scripture | [BibleGet I/O](https://query.bibleget.io) · NABRE | Apache-2.0 · © USCCB |
+| Prayers | [mycatholic.life](https://mycatholic.life/catholic-prayers) | scraped on first access, cached locally |
+
+---
+
+## Development
+
+```bash
+git clone https://github.com/clementinepujiutami/cathCLI.git
+cd cathCLI
+pnpm install
+pnpm dev         # run without building
+pnpm build       # compile TypeScript → dist/
+```
+
+---
 
 ## License
 
-MIT © Clementine Puji Utami
+MIT © [Clementine Puji Utami](https://github.com/clementinepujiutami)

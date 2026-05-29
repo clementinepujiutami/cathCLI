@@ -13,52 +13,41 @@ export const C = {
   bold:   (s: string) => chalk.bold(s),
 };
 
-// ── Pixel-art Jesus the Good Shepherd ───────────────────────────────────────
+// ── Pixel-art cat mascot (cath = cat-holic) ─────────────────────────────────
 // Each "pixel" = 2 terminal chars wide for square proportions
 function px(color: (s: string) => string): string {
   return color('██');
 }
 
-const _ = '  ';           // empty pixel
-const G = px(C.gold);     // gold (halo / cross)
-const W = px(C.white);    // white (halo outline / cloud)
-const B = px(C.brown);    // brown (hair, beard, staff)
-const S = px(C.skin);     // skin
-const R = px(C.red);      // red (cross on robe)
-const K = px(C.cream);    // cream (robe / lamb)
-const D = px(C.dim);      // shadow
+const _  = '  ';          // empty pixel (1 unit)
+const K  = px(C.cream);   // cream body
+const Ey = px(C.sky);     // sky-blue eyes
+const Ns = px(C.gold);    // gold nose
+const Ie = px(C.skin);    // warm inner ear
+const Tl = px(C.gold);    // gold tail tip accent
 
-export function jesusArt(): string[] {
+export function catArt(): string[] {
   return [
-    `           ${G}           `,
-    `        ${W}${G}${W}        `,
-    `      ${W}${B}${B}${B}${B}${W}      `,
-    `     ${W}${B}${B}${B}${B}${B}${B}${W}     `,
-    `     ${W}${B}${S}${S}${S}${S}${B}${W}     `,
-    `     ${W}${B}${S}${B}${_}${B}${S}${B}${W}  `,
-    `     ${W}${B}${S}${S}${S}${S}${B}${W}     `,
-    `     ${W}${B}${B}${S}${S}${B}${B}${W}     `,
-    `      ${W}${B}${B}${B}${B}${B}${W}      `,
-    `     ${K}${K}${K}${K}${K}${K}${K}   ${B}  `,
-    `    ${K}${K}${R}${K}${K}${K}${K}${K}  ${B}  `,
-    `  ${K}${K}${K}${K}${K}${K}${K}${K}${K}  ${B}  `,
-    `  ${K}${K}${K}${K}${K}${K}${K}${K}${K}     `,
-  ];
-}
-
-// ── Lamb (Good Shepherd's lamb) ──────────────────────────────────────────────
-export function lambArt(): string[] {
-  return [
-    `  ${W}${W}${W}  `,
-    ` ${W}${S}${W}${W} `,
-    `  ${W}${W}${W}  `,
-    `  ${D}${_}${D}  `,
+    `${K}${_}${_}${_}${_}${_}${_}${K}${_}${_}`,  // ear tips
+    `${K}${K}${Ie}${_}${_}${_}${Ie}${K}${K}${_}`, // inner ears
+    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${_}`,   // head
+    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${_}`,   // head
+    `${K}${Ey}${K}${K}${K}${K}${Ey}${K}${K}${_}`, // eyes
+    `${K}${K}${K}${_}${Ns}${_}${K}${K}${K}${_}`,  // nose
+    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${_}`,   // chin
+    `${_}${K}${K}${K}${K}${K}${K}${K}${_}${_}`,   // neck
+    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${_}`,   // upper body
+    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}`,   // body + tail starts
+    `${K}${K}${K}${K}${K}${K}${K}${K}${_}${K}`,   // body + tail curves
+    `${K}${K}${_}${_}${_}${_}${K}${K}${_}${K}`,   // upper legs + tail
+    `${K}${K}${_}${_}${_}${_}${K}${K}${Tl}${_}`,  // lower legs + tail tip
+    `${K}${_}${_}${_}${_}${_}${_}${K}${_}${_}`,   // paws
   ];
 }
 
 // ── Full banner (character + title) ─────────────────────────────────────────
 export function banner(): string {
-  const art = jesusArt();
+  const art = catArt();
   const title = [
     '',
     C.gold(chalk.bold('  ✝  Holy Bible & Catholic Prayers  ✝')),
@@ -100,7 +89,8 @@ export function sectionHeader(title: string, icon = '✝'): string {
 
 // ── Verse box ────────────────────────────────────────────────────────────────
 export function verseBox(ref: string, text: string): string {
-  const boxen = require('boxen');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const boxen = require('boxen').default ?? require('boxen');
   return boxen(
     C.gold(`✝  ${ref}\n\n`) + C.cream(text),
     {
@@ -114,7 +104,8 @@ export function verseBox(ref: string, text: string): string {
 
 // ── Prayer box ───────────────────────────────────────────────────────────────
 export function prayerBox(title: string, text: string): string {
-  const boxen = require('boxen');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const boxen = require('boxen').default ?? require('boxen');
   return boxen(
     C.gold(`🙏  ${title}\n\n`) + C.cream(text),
     {
