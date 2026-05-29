@@ -31,10 +31,10 @@
 
 ## Install
 
-Requires [Node.js](https://nodejs.org) ≥ 18.
+Requires [Node.js](https://nodejs.org) ≥ 18 and [pnpm](https://pnpm.io).
 
 ```bash
-npm install -g github:clementinepujiutami/cathCLI
+pnpm install -g github:clementinepujiutami/cathCLI
 ```
 
 Then just run:
