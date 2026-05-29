@@ -21,9 +21,9 @@
 
 **cat-holic** · Holy Bible & Catholic Prayers in your terminal
 
-[![npm version](https://img.shields.io/npm/v/cathcli)](https://www.npmjs.com/package/cathcli)
-[![license](https://img.shields.io/npm/l/cathcli)](LICENSE)
-[![node](https://img.shields.io/node/v/cathcli)](package.json)
+[![version](https://img.shields.io/badge/version-1.0.0-gold)](https://www.npmjs.com/package/cathcli)
+[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](package.json)
 
 </div>
 
