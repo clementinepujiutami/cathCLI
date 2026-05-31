@@ -13,35 +13,43 @@ export const C = {
   bold:   (s: string) => chalk.bold(s),
 };
 
-// ── Pixel-art cat mascot (cath = cat-holic) ─────────────────────────────────
+// ── Pixel-art mascot: Pawpe Miau (cath = cat-holic) ─────────────────────────
 // Each "pixel" = 2 terminal chars wide for square proportions
 function px(color: (s: string) => string): string {
   return color('██');
 }
 
 const _  = '  ';          // empty pixel (1 unit)
-const K  = px(C.cream);   // cream body
+const K  = px(C.skin);    // orange tabby fur
+const M  = px(C.cream);   // bishop mitre
+const G  = px(C.gold);    // gold trim
+const R  = px(C.red);     // red vestments
 const Ey = px(C.sky);     // sky-blue eyes
 const Ns = px(C.gold);    // gold nose
-const Ie = px(C.skin);    // warm inner ear
-const Tl = px(C.gold);    // gold tail tip accent
+const Ie = px(C.brown);   // tabby stripes / inner detail
+const W  = px(C.white);   // collar
 
 export function catArt(): string[] {
   return [
-    `${K}${_}${_}${_}${_}${_}${_}${K}${_}${_}`,  // ear tips
-    `${K}${K}${Ie}${_}${_}${_}${Ie}${K}${K}${_}`, // inner ears
-    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${_}`,   // head
-    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${_}`,   // head
-    `${K}${Ey}${K}${K}${K}${K}${Ey}${K}${K}${_}`, // eyes
-    `${K}${K}${K}${_}${Ns}${_}${K}${K}${K}${_}`,  // nose
-    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${_}`,   // chin
-    `${_}${K}${K}${K}${K}${K}${K}${K}${_}${_}`,   // neck
-    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${_}`,   // upper body
-    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}`,   // body + tail starts
-    `${K}${K}${K}${K}${K}${K}${K}${K}${_}${K}`,   // body + tail curves
-    `${K}${K}${_}${_}${_}${_}${K}${K}${_}${K}`,   // upper legs + tail
-    `${K}${K}${_}${_}${_}${_}${K}${K}${Tl}${_}`,  // lower legs + tail tip
-    `${K}${_}${_}${_}${_}${_}${_}${K}${_}${_}`,   // paws
+    `${_}${_}${_}${_}${_}${_}${_}${M}${M}${_}${_}${_}${_}${_}${_}${_}`,
+    `${_}${_}${_}${_}${_}${_}${M}${M}${M}${M}${_}${_}${_}${_}${_}${_}`,
+    `${_}${_}${_}${_}${_}${M}${M}${G}${G}${M}${M}${_}${_}${_}${_}${_}`,
+    `${_}${_}${_}${_}${M}${M}${G}${G}${G}${G}${M}${M}${_}${_}${_}${_}`,
+    `${_}${_}${_}${M}${M}${G}${M}${G}${G}${M}${G}${M}${M}${_}${_}${_}`,
+    `${_}${_}${M}${M}${M}${M}${M}${M}${M}${M}${M}${M}${M}${M}${_}${_}`,
+    `${_}${_}${G}${G}${G}${G}${G}${G}${G}${G}${G}${G}${G}${G}${_}${_}`,
+    `${_}${K}${K}${Ie}${Ie}${K}${K}${K}${K}${K}${K}${Ie}${Ie}${K}${K}${_}`,
+    `${K}${K}${K}${Ie}${K}${K}${K}${K}${K}${K}${K}${K}${Ie}${K}${K}${K}`,
+    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}`,
+    `${K}${K}${K}${Ey}${K}${K}${K}${K}${K}${K}${K}${Ey}${K}${K}${K}${K}`,
+    `${K}${K}${K}${K}${K}${K}${Ns}${Ns}${K}${K}${K}${K}${K}${K}${K}${K}`,
+    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}`,
+    `${_}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${_}`,
+    `${R}${R}${R}${R}${R}${W}${W}${W}${W}${W}${W}${R}${R}${R}${R}${R}`,
+    `${R}${R}${K}${R}${R}${R}${R}${G}${G}${R}${R}${R}${R}${K}${R}${R}`,
+    `${K}${K}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${K}${K}`,
+    `${K}${K}${R}${R}${G}${G}${R}${R}${R}${R}${G}${G}${R}${R}${K}${K}`,
+    `${_}${_}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${_}${_}`,
   ];
 }
 
@@ -50,20 +58,22 @@ export function banner(): string {
   const art = catArt();
   const title = [
     '',
-    C.gold(chalk.bold('  ✝  Holy Bible & Catholic Prayers  ✝')),
+    C.gold(chalk.bold('  ✝  Pawpe Miau  ✝')),
+    C.cream('  Holy Bible & Catholic Prayers'),
     '',
     C.cream('  New American Bible  ·  Catholic Canon'),
     C.dim('  Source: Vatican Archive & mycatholic.life'),
     '',
-    C.sky('  Commands:'),
-    C.white('  ') + C.gold('bible') + C.dim(' <book> <chapter>') + C.white('  — read a chapter'),
-    C.white('  ') + C.gold('verse') + C.dim(' <book> <ch>:<v>') + C.white('   — single verse'),
-    C.white('  ') + C.gold('books') + C.white('                  — list all 73 books'),
-    C.white('  ') + C.gold('pray')  + C.dim(' [name]') + C.white('          — Catholic prayers'),
-    C.white('  ') + C.gold('random') + C.white('                — verse of the day'),
-    C.white('  ') + C.gold('search') + C.dim(' <keyword>') + C.white('     — search the Bible'),
+    C.sky('  Quick tutorial:'),
+    C.white('  ') + C.gold('cath read jn 3') + C.white('          — read John chapter 3'),
+    C.white('  ') + C.gold('cath verse ps 23:1') + C.white('      — show one verse'),
+    C.white('  ') + C.gold('cath books') + C.white('              — list all 73 books'),
+    C.white('  ') + C.gold('cath pray') + C.white('               — browse prayers'),
+    C.white('  ') + C.gold('cath pray "hail mary"') + C.white('  — open a prayer'),
+    C.white('  ') + C.gold('cath random') + C.white('             — receive a random verse'),
+    C.white('  ') + C.gold('cath search mercy') + C.white('       — search cached verses'),
     '',
-    C.dim('  Type  bible --help  for full usage'),
+    C.dim('  Type  cath <command> --help  for command details'),
   ];
 
   const lines: string[] = [];

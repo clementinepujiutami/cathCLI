@@ -46,6 +46,7 @@ export function registerPray(program: Command) {
         { name: `${C.gold('Devotional Prayers')}  (${cats.devotion.length})`, value: 'devotion' },
         { name: `${C.gold('Litanies')}            (${cats.litany.length})`, value: 'litany' },
         { name: `${C.gold('The Rosary')}          (${cats.rosary.length})`, value: 'rosary' },
+        { name: `${C.gold('Chaplets')}            (${cats.chaplet.length})`, value: 'chaplet' },
       ];
 
       const { category } = await inquirer.prompt([{
