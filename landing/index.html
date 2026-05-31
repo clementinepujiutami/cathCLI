@@ -495,8 +495,8 @@
   });
 
   // ---- feedback form ----
-  window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
-  formspree('initForm', {
+  window.formspree = window.formspree || function () { (window.formspree.q = window.formspree.q || []).push(arguments); };
+  window.formspree('initForm', {
     formElement: '#ff-form',
     formId: 'xeedwreo',
     onSubmit: () => {
