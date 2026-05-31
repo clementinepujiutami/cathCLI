@@ -27,7 +27,7 @@
 **Pawpe Miau** · **cat-holic** · Holy Bible & Catholic Prayers in your terminal
 
 [![version](https://img.shields.io/badge/version-1.0.2-gold)](https://www.npmjs.com/package/cathcli)
-[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![license](https://img.shields.io/badge/license-source--available-blue)](LICENSE)
 [![node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](package.json)
 
 </div>
@@ -146,4 +146,10 @@ pnpm build       # compile TypeScript → dist/
 
 ## License
 
-MIT © [Clementine Puji Utami](https://github.com/clementinepujiutami)
+Source-available. You may view this repository and install/run cathCLI for
+personal use. Copying, modifying, distributing, sublicensing, selling,
+publishing, packaging, hosting, or creating derivative works requires prior
+written permission from [Clementine Puji Utami](https://github.com/clementinepujiutami).
+Contact: [clemnomad@proton.me](mailto:clemnomad@proton.me).
+
+See [LICENSE](LICENSE).
