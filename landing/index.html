@@ -173,10 +173,43 @@
   footer .credits{ color:var(--ink2); font-size:12px; line-height:1.8; opacity:.85; }
   footer .amen{ font-family:'Press Start 2P', monospace; font-size:10px; color:var(--golddeep); margin-top:16px; }
 
+  /* ---------- FEEDBACK ---------- */
+  .ff-wrap{ max-width:680px; margin:40px auto 0; }
+  .ff{
+    background:var(--parch3); border:5px solid var(--ink);
+    box-shadow:9px 9px 0 rgba(28,23,18,.9); padding:32px 30px;
+    display:flex; flex-direction:column; gap:22px; position:relative;
+  }
+  .ff::after{ content:""; position:absolute; inset:5px; border:2px solid var(--gold); pointer-events:none; }
+  .ff-row{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .ff-field{ display:flex; flex-direction:column; gap:8px; }
+  .ff-label{ font-family:'Press Start 2P', monospace; font-size:9px; color:var(--golddeep); letter-spacing:.5px; }
+  .ff-opt{ color:var(--ink2); font-size:8px; }
+  .ff-req{ color:var(--red); }
+  .ff-inp{
+    background:var(--screen); color:var(--parch3);
+    border:4px solid var(--ink); box-shadow:3px 3px 0 var(--ink);
+    padding:11px 13px; font-family:'JetBrains Mono', monospace; font-size:13.5px;
+    outline:none; width:100%; resize:none; transition:box-shadow .1s;
+  }
+  .ff-inp:focus{ box-shadow:4px 4px 0 var(--gold); outline:2px solid var(--gold); outline-offset:0; }
+  .ff-inp::placeholder{ color:#6a5f4d; }
+  .ff-ta{ resize:vertical; min-height:120px; }
+  select.ff-inp{
+    cursor:pointer; -webkit-appearance:none; appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%23c8a24a' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 12px center; padding-right:30px;
+  }
+  .ff-foot{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+  .ff-privacy{ margin:0; font-size:12px; color:var(--ink2); opacity:.7; }
+  .ff-thanks{ display:none; }
+  .ff-thanks.show{ display:block; }
+
   @media (max-width:720px){
     .cards{ grid-template-columns:1fr; }
     .topchips{ padding:0 30px; }
     .hero .frame{ inset:14px; }
+    .ff-row{ grid-template-columns:1fr; }
   }
 </style>
 </head>
@@ -300,6 +333,56 @@
 
 <div class="div"><span class="line"></span><img class="px" src="assets/cross.png" alt="" /><span class="line"></span></div>
 
+<!-- ============ FEEDBACK ============ -->
+<section data-screen-label="Feedback">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>LEAVE A PAWPRINT</h2>
+      <p>Got a suggestion, spotted a bug in Pawpe's scroll, or just want to say hello? Every message is a blessing.</p>
+    </div>
+    <div class="ff-wrap">
+      <form class="ff" id="ff-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="ff-row">
+          <div class="ff-field">
+            <label class="ff-label" for="ff-name">NAME <span class="ff-opt">(optional)</span></label>
+            <input class="ff-inp" id="ff-name" name="name" type="text" placeholder="Your name or handle..." autocomplete="off" />
+          </div>
+          <div class="ff-field">
+            <label class="ff-label" for="ff-type">TYPE</label>
+            <select class="ff-inp" id="ff-type" name="type">
+              <option value="suggestion">✦ Suggestion</option>
+              <option value="bug">✗ Bug Report</option>
+              <option value="praise">♥ Praise</option>
+              <option value="other">· Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="ff-field">
+          <label class="ff-label" for="ff-msg">MESSAGE <span class="ff-req">*</span></label>
+          <textarea class="ff-inp ff-ta" id="ff-msg" name="message" required placeholder="Type thy message here..."></textarea>
+        </div>
+        <div class="ff-foot">
+          <button class="btn" type="submit" id="ff-submit">▸ SEND THY MESSAGE</button>
+          <p class="ff-privacy">No account needed. Goes straight to Pawpe's inbox.</p>
+        </div>
+      </form>
+      <div class="ff-thanks" id="ff-thanks">
+        <div class="term" style="max-width:500px; margin:0 auto;">
+          <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot g"></span><span class="ttl">message delivered ✓</span></div>
+          <div class="body">
+            <div class="g">Message sent! Pawpe says:</div>
+            <div style="margin-top:10px;">"Thank you, dear pilgrim. Your words have been received.</div>
+            <div>&nbsp;May your terminal always be blessed."</div>
+            <div style="margin-top:14px;" class="d">— Pawpe Miau 🐾<span class="cursor blink"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"><span class="line"></span><img class="px" src="assets/cross.png" alt="" /><span class="line"></span></div>
+
 <!-- ============ SUPPORT ============ -->
 <section class="support" data-screen-label="Support">
   <div class="wrap">
@@ -385,6 +468,36 @@
     showVerse(VERSES[idx]);
     btn.classList.remove('pulse'); void btn.offsetWidth;
   });
+
+  // ---- feedback form ----
+  const ffForm    = document.getElementById('ff-form');
+  const ffThanks  = document.getElementById('ff-thanks');
+  const ffSubmit  = document.getElementById('ff-submit');
+  if (ffForm) {
+    ffForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const orig = ffSubmit.textContent;
+      ffSubmit.textContent = 'SENDING...';
+      ffSubmit.disabled = true;
+      try {
+        const res = await fetch(ffForm.action, {
+          method: 'POST',
+          body: new FormData(ffForm),
+          headers: { 'Accept': 'application/json' },
+        });
+        if (res.ok) {
+          ffForm.hidden = true;
+          ffThanks.classList.add('show');
+        } else {
+          throw new Error('server');
+        }
+      } catch {
+        ffSubmit.textContent = orig;
+        ffSubmit.disabled = false;
+        alert("Pawpe couldn't deliver thy message. Try again?");
+      }
+    });
+  }
 </script>
 </body>
 </html>
