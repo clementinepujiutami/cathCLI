@@ -30,6 +30,10 @@
 [![license](https://img.shields.io/badge/license-source--available-blue)](LICENSE)
 [![node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](package.json)
 
+[![Support me on Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/clemnomadlife)
+
+If Pawpe Miau blesses your terminal, you can support cathCLI on [Ko-fi](https://ko-fi.com/clemnomadlife).
+
 </div>
 
 ---
