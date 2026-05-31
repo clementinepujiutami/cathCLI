@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import ora from 'ora';
 import { searchVerses } from '../services/bible';
 import { findBook, BIBLE_BOOKS } from '../data/books';
+import { BUILTIN_PRAYERS } from '../data/prayers';
 import { C, sectionHeader, spinnerStyle } from '../ui/art';
 
 // Strip common English prefixes before trying to match a book name
@@ -107,6 +108,24 @@ export function registerSearch(program: Command) {
               return;
             }
           }
+        }
+
+        // ── 4. Fall back to built-in prayer search ───────────────────────────
+        // Split into meaningful words so "st michael" matches "Saint Michael"
+        const qWords = query.toLowerCase().split(/\s+/).filter(w => w.length >= 3);
+        const prayerMatches = qWords.length
+          ? BUILTIN_PRAYERS.filter(p => {
+              const body = (p.title + ' ' + p.text).toLowerCase();
+              return qWords.every(w => body.includes(w));
+            })
+          : [];
+        if (prayerMatches.length) {
+          console.log(C.dim(`\n  No Bible verse cache results for "${query}" — found in prayers:\n`));
+          for (const p of prayerMatches) {
+            console.log(`  ${C.gold('✦')} ${C.cream(p.title)}  ${C.dim(`→ cath pray ${p.id}`)}`);
+          }
+          console.log();
+          return;
         }
 
         console.log(C.dim(`\n  No cached results for "${query}".`));

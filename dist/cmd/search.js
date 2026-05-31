@@ -7,6 +7,7 @@ exports.registerSearch = registerSearch;
 const ora_1 = __importDefault(require("ora"));
 const bible_1 = require("../services/bible");
 const books_1 = require("../data/books");
+const prayers_1 = require("../data/prayers");
 const art_1 = require("../ui/art");
 // Strip common English prefixes before trying to match a book name
 const STRIP_RE = [
@@ -99,6 +100,23 @@ function registerSearch(program) {
                         return;
                     }
                 }
+            }
+            // ── 4. Fall back to built-in prayer search ───────────────────────────
+            // Split into meaningful words so "st michael" matches "Saint Michael"
+            const qWords = query.toLowerCase().split(/\s+/).filter(w => w.length >= 3);
+            const prayerMatches = qWords.length
+                ? prayers_1.BUILTIN_PRAYERS.filter(p => {
+                    const body = (p.title + ' ' + p.text).toLowerCase();
+                    return qWords.every(w => body.includes(w));
+                })
+                : [];
+            if (prayerMatches.length) {
+                console.log(art_1.C.dim(`\n  No Bible verse cache results for "${query}" — found in prayers:\n`));
+                for (const p of prayerMatches) {
+                    console.log(`  ${art_1.C.gold('✦')} ${art_1.C.cream(p.title)}  ${art_1.C.dim(`→ cath pray ${p.id}`)}`);
+                }
+                console.log();
+                return;
             }
             console.log(art_1.C.dim(`\n  No cached results for "${query}".`));
             console.log(art_1.C.dim('  Read some chapters first — try:') + '  ' + art_1.C.sky('cath read jn 1'));
