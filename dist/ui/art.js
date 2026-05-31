@@ -65,7 +65,8 @@ function banner() {
     const title = [
         '',
         exports.C.gold(chalk_1.default.bold('  ✝  Pawpe Miau  ✝')),
-        exports.C.cream('  Holy Bible & Catholic Prayers'),
+        exports.C.cream("  Let's Puurray!"),
+        exports.C.dim('  Holy Bible & Catholic Prayers'),
         '',
         exports.C.cream('  New American Bible  ·  Catholic Canon'),
         exports.C.dim('  Source: Vatican Archive & mycatholic.life'),

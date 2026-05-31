@@ -59,7 +59,8 @@ export function banner(): string {
   const title = [
     '',
     C.gold(chalk.bold('  ✝  Pawpe Miau  ✝')),
-    C.cream('  Holy Bible & Catholic Prayers'),
+    C.cream("  Let's Puurray!"),
+    C.dim('  Holy Bible & Catholic Prayers'),
     '',
     C.cream('  New American Bible  ·  Catholic Canon'),
     C.dim('  Source: Vatican Archive & mycatholic.life'),

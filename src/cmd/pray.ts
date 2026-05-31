@@ -37,7 +37,7 @@ export function registerPray(program: Command) {
       }
 
       // Interactive browser
-      console.log(sectionHeader('Catholic Prayers'));
+      console.log(sectionHeader("Let's Puurray!", '🐾'));
       const cats = prayersByCategory();
 
       const categoryChoices = [

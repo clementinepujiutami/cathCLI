@@ -72,7 +72,7 @@ function registerPray(program) {
             return;
         }
         // Interactive browser
-        console.log((0, art_1.sectionHeader)('Catholic Prayers'));
+        console.log((0, art_1.sectionHeader)("Let's Puurray!", '🐾'));
         const cats = (0, prayers_1.prayersByCategory)();
         const categoryChoices = [
             { name: `${art_1.C.gold('Daily Prayers')}       (${cats.daily.length})`, value: 'daily' },
