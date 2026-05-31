@@ -1,6 +1,6 @@
 {
   "name": "cathcli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A CLI for the Holy Bible (Catholic Canon — NABRE) and Catholic Prayers",
   "main": "dist/index.js",
   "bin": {

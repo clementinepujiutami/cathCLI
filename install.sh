@@ -9,10 +9,10 @@ DIM='\033[2m'
 RESET='\033[0m'
 
 echo ""
-echo -e "${BOLD}  ██            ██${RESET}"
-echo -e "${BOLD}  ██████      ██████${RESET}"
-echo -e "${BOLD}  ██████████████████${RESET}"
-echo -e "  cathCLI — cat-holic · Holy Bible & Catholic Prayers"
+echo -e "${BOLD}              ████${RESET}"
+echo -e "${BOLD}            ████████${RESET}"
+echo -e "${BOLD}          ████████████${RESET}"
+echo -e "  cathCLI — Pawpe Miau · cat-holic · Holy Bible & Catholic Prayers"
 echo ""
 
 # ── Node.js ───────────────────────────────────────────────────────────────────
@@ -48,7 +48,19 @@ fi
 # ── cathCLI ───────────────────────────────────────────────────────────────────
 echo ""
 echo -e "  ${DIM}Installing cathCLI from GitHub...${RESET}"
-pnpm install -g github:clementinepujiutami/cathCLI
+pnpm install -g --force github:clementinepujiutami/cathCLI
+
+hash -r 2>/dev/null || true
+if command -v cath &>/dev/null; then
+  CATH_BIN=$(command -v cath)
+  PNPM_BIN=$(pnpm bin -g 2>/dev/null || true)
+  if [ -n "$PNPM_BIN" ] && [ "${CATH_BIN#$PNPM_BIN/}" = "$CATH_BIN" ]; then
+    echo ""
+    echo -e "${YELLOW}  ! Your shell is finding cath at: ${CATH_BIN}${RESET}"
+    echo -e "${DIM}    pnpm installed the fresh version under: ${PNPM_BIN}${RESET}"
+    echo -e "${DIM}    If the old banner remains, remove or move the older cath binary earlier in PATH.${RESET}"
+  fi
+fi
 
 echo ""
 echo -e "${GREEN}${BOLD}  ✔ Done! cathCLI is ready.${RESET}"

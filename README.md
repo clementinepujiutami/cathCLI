@@ -26,7 +26,7 @@
 
 **Pawpe Miau** · **cat-holic** · Holy Bible & Catholic Prayers in your terminal
 
-[![version](https://img.shields.io/badge/version-1.0.1-gold)](https://www.npmjs.com/package/cathcli)
+[![version](https://img.shields.io/badge/version-1.0.2-gold)](https://www.npmjs.com/package/cathcli)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](package.json)
 
@@ -55,7 +55,7 @@ sudo mv cath-linux /usr/local/bin/cath
 ### pnpm (manual)
 
 ```bash
-pnpm install -g github:clementinepujiutami/cathCLI
+pnpm install -g --force github:clementinepujiutami/cathCLI
 ```
 
 Then run:
