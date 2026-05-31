@@ -40,17 +40,20 @@ If Pawpe Miau blesses your terminal, you can support cathCLI on [Ko-fi](https://
 
 ## Install
 
-The easiest way to install **cathCLI** is via **npm** (Node Package Manager).
+### 1. Via Package Manager (npm, pnpm, or yarn)
 
-### 1. Via npm (Recommended)
-
-If you have Node.js installed, just run:
+If you have Node.js installed, run the installation command for your preferred package manager:
 
 ```bash
+# Using npm
 npm install -g clementinepujiutami/cathCLI
-```
 
-*(You can also use `pnpm` or `yarn` if you prefer!)*
+# Using pnpm
+pnpm add -g github:clementinepujiutami/cathCLI
+
+# Using yarn
+yarn global add clementinepujiutami/cathCLI
+```
 
 ### 2. Standalone Binary (No Node.js Required)
 

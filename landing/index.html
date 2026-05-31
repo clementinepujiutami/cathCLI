@@ -234,6 +234,10 @@
     <div class="sub">PAWPE&nbsp;MIAU&nbsp;&nbsp;·&nbsp;&nbsp;CAT-HOLIC</div>
     <p class="tag">The Holy Bible &amp; Catholic prayers, blessed straight into your terminal.</p>
 
+    <div style="display:flex; gap:10px; margin-bottom:-4px;">
+      <span class="chip" style="cursor:pointer;" id="tab-npm">NPM</span>
+      <span class="chip ghost" style="cursor:pointer;" id="tab-pnpm">PNPM</span>
+    </div>
     <div class="cmd">
       <span class="dollar">$</span>
       <span class="txt" id="install-line">npm install -g clementinepujiutami/cathCLI</span>
@@ -416,15 +420,36 @@
 
 <script>
   // ---- copy install command ----
-  const INSTALL = "npm install -g clementinepujiutami/cathCLI";
+  let installCmd = "npm install -g clementinepujiutami/cathCLI";
   document.querySelectorAll('[data-copy]').forEach(btn => {
     btn.addEventListener('click', () => {
-      navigator.clipboard?.writeText(INSTALL);
+      navigator.clipboard?.writeText(installCmd);
       const old = btn.textContent;
       btn.textContent = "BLESSED ✓";
       setTimeout(() => { btn.textContent = old; }, 1500);
     });
   });
+
+  // ---- package manager tabs ----
+  const tabNpm = document.getElementById('tab-npm');
+  const tabPnpm = document.getElementById('tab-pnpm');
+  const installLine = document.getElementById('install-line');
+
+  if (tabNpm && tabPnpm && installLine) {
+    tabNpm.addEventListener('click', () => {
+      tabNpm.classList.remove('ghost');
+      tabPnpm.classList.add('ghost');
+      installCmd = "npm install -g clementinepujiutami/cathCLI";
+      installLine.textContent = installCmd;
+    });
+
+    tabPnpm.addEventListener('click', () => {
+      tabPnpm.classList.remove('ghost');
+      tabNpm.classList.add('ghost');
+      installCmd = "pnpm add -g github:clementinepujiutami/cathCLI";
+      installLine.textContent = installCmd;
+    });
+  }
 
   // ---- random verse blessing ----
   const VERSES = [
