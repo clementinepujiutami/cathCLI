@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>cathCLI · Pawpe Miau — the cat-holic terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#1c1712; --ink2:#2a2017;
+    --parch:#efe7d3; --parch2:#e6d9bd; --parch3:#f5eedb;
+    --gold:#c8a24a; --goldhi:#e7c66b; --golddeep:#9c7c2e;
+    --red:#b8392b; --reddeep:#8a2f24;
+    --screen:#231d16;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; color:var(--ink);
+    font-family:'JetBrains Mono', monospace;
+    background:
+      radial-gradient(120% 80% at 50% -10%, #f6efdb 0%, var(--parch) 45%, #e7dbc0 100%) fixed;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:radial-gradient(rgba(28,23,18,.05) 1px, transparent 1px);
+    background-size:4px 4px; mix-blend-mode:multiply; opacity:.55;
+  }
+  img.px{ image-rendering:pixelated; }
+  .px-font{ font-family:'Press Start 2P', monospace; }
+
+  /* ---------- shared atoms ---------- */
+  .wrap{ max-width:1040px; margin:0 auto; padding:0 24px; position:relative; z-index:1; }
+
+  .title{
+    font-family:'Press Start 2P', monospace; color:var(--gold); margin:0;
+    text-shadow:0 4px 0 var(--golddeep), 5px 8px 0 rgba(28,23,18,.85);
+    letter-spacing:1px; line-height:1.15;
+  }
+  .kicker{
+    font-family:'Press Start 2P', monospace; font-size:11px; color:var(--ink2);
+    letter-spacing:1px;
+  }
+  .chip{
+    font-family:'Press Start 2P', monospace; font-size:9px; line-height:1; color:var(--ink);
+    background:var(--gold); padding:8px 9px; border:3px solid var(--ink); box-shadow:3px 3px 0 var(--ink);
+  }
+  .chip.ghost{ background:transparent; box-shadow:3px 3px 0 rgba(28,23,18,.22); }
+
+  .cmd{
+    display:flex; align-items:center; gap:10px;
+    background:var(--screen); color:var(--parch3);
+    border:4px solid var(--ink); box-shadow:5px 5px 0 var(--ink);
+    padding:13px 14px; font-size:13.5px;
+  }
+  .cmd .dollar{ color:var(--gold); flex:none; }
+  .cmd .txt{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cmd .copy{
+    margin-left:auto; flex:none; cursor:pointer; border:3px solid var(--ink);
+    font-family:'Press Start 2P', monospace; font-size:8px;
+    background:var(--gold); color:var(--ink); padding:8px 9px; box-shadow:2px 2px 0 var(--ink);
+  }
+  .cmd .copy:active{ transform:translate(2px,2px); box-shadow:0 0 0 var(--ink); }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:10px; cursor:pointer; text-decoration:none;
+    font-family:'Press Start 2P', monospace; font-size:11px;
+    background:var(--gold); color:var(--ink);
+    border:4px solid var(--ink); box-shadow:6px 6px 0 var(--ink);
+    padding:15px 18px; transition:transform .08s, box-shadow .08s;
+  }
+  .btn:hover{ transform:translate(-1px,-1px); box-shadow:7px 7px 0 var(--ink); }
+  .btn:active{ transform:translate(3px,3px); box-shadow:3px 3px 0 var(--ink); }
+  .btn.ko{ background:var(--red); color:var(--parch3); }
+  .btn.ghost{ background:transparent; }
+
+  .blink{ animation:bl 1.05s steps(1) infinite; }
+  @keyframes bl{ 50%{ opacity:0; } }
+
+  /* divider: little gold crosses */
+  .div{ display:flex; gap:18px; align-items:center; justify-content:center; padding:46px 0; opacity:.9; }
+  .div img{ width:16px; }
+  .div .line{ width:54px; height:4px; background:repeating-linear-gradient(90deg, var(--gold) 0 6px, transparent 6px 12px); }
+
+  /* ---------- HERO ---------- */
+  .hero{ position:relative; padding:70px 18px 64px; }
+  .hero .frame{
+    position:absolute; inset:24px; border:6px solid var(--ink);
+    box-shadow:inset 0 0 0 4px var(--parch), inset 0 0 0 9px var(--gold);
+    pointer-events:none;
+  }
+  .hero .corner{ position:absolute; width:14px; height:14px; background:var(--ink); }
+  .hero-inner{
+    position:relative; z-index:1; max-width:760px; margin:0 auto; text-align:center;
+    display:flex; flex-direction:column; align-items:center; gap:20px; padding:40px 16px;
+  }
+  .topchips{ position:absolute; z-index:1; top:48px; left:0; right:0; display:flex; justify-content:space-between; padding:0 56px; }
+  .mascot-glow{ position:relative; display:flex; justify-content:center; margin-top:8px; }
+  .mascot-glow::before{
+    content:""; position:absolute; inset:-26px -50px;
+    background:radial-gradient(closest-side, rgba(200,162,74,.40), transparent 72%);
+  }
+  .mascot-glow img{ position:relative; width:228px; height:auto; }
+  .hero h1{ font-size:clamp(40px, 8vw, 66px); }
+  .hero .sub{ font-family:'Press Start 2P', monospace; font-size:12px; color:var(--ink2); }
+  .hero .tag{ font-size:clamp(15px,2.4vw,18px); color:var(--ink2); margin:0; max-width:30ch; text-wrap:balance; }
+  .hero .cmd{ width:min(620px, 92%); }
+  .hero-btns{ display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-top:2px; }
+  .startline{ font-family:'Press Start 2P', monospace; font-size:11px; color:var(--golddeep); margin-top:4px; }
+
+  /* ---------- SECTION ---------- */
+  section{ position:relative; z-index:1; padding:18px 0 4px; }
+  .sec-head{ text-align:center; margin-bottom:8px; }
+  .sec-head h2{ font-family:'Press Start 2P', monospace; font-size:clamp(17px,3.4vw,26px); color:var(--ink); margin:0 0 14px; letter-spacing:1px; }
+  .sec-head p{ color:var(--ink2); font-size:15px; max-width:54ch; margin:0 auto; text-wrap:pretty; }
+
+  .cards{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:38px; }
+  .card{
+    background:var(--parch3); border:5px solid var(--ink);
+    box-shadow:8px 8px 0 rgba(28,23,18,.9); padding:22px 22px 24px;
+    display:flex; flex-direction:column; gap:12px; position:relative;
+  }
+  .card::after{ content:""; position:absolute; inset:5px; border:2px solid var(--gold); pointer-events:none; }
+  .card .ico{ width:26px; image-rendering:pixelated; }
+  .card h3{ font-family:'Press Start 2P', monospace; font-size:12px; color:var(--golddeep); margin:2px 0 0; line-height:1.5; }
+  .card p{ margin:0; font-size:14px; line-height:1.6; color:var(--ink2); }
+  .card .mini{
+    margin-top:auto; background:var(--screen); color:var(--parch3);
+    border:3px solid var(--ink); padding:9px 11px; font-size:12.5px; display:flex; gap:8px; align-items:center;
+  }
+  .card .mini .dollar{ color:var(--gold); }
+
+  /* session terminal */
+  .term{ background:var(--screen); border:5px solid var(--ink); box-shadow:9px 9px 0 rgba(28,23,18,.9); margin-top:34px; overflow:hidden; }
+  .term .bar{ display:flex; align-items:center; gap:8px; background:var(--ink); padding:9px 12px; }
+  .term .bar .dot{ width:12px; height:12px; background:var(--parch2); }
+  .term .bar .dot.g{ background:var(--gold); }
+  .term .bar .ttl{ margin-left:8px; font-family:'Press Start 2P', monospace; font-size:8px; color:var(--parch2); }
+  .term .body{ padding:18px 20px; color:var(--parch3); font-size:13.5px; line-height:1.75; overflow-x:auto; }
+  .term .body .g{ color:var(--gold); } .term .body .d{ color:#9c9279; } .term .body .ref{ color:var(--goldhi); }
+  .cursor{ display:inline-block; width:9px; height:15px; background:var(--gold); vertical-align:-2px; }
+
+  /* ---------- RANDOM VERSE ---------- */
+  .bless{ max-width:720px; margin:0 auto; text-align:center; }
+  .verse-term{ text-align:left; min-height:148px; }
+  .verse-term .ref{ color:var(--goldhi); font-weight:700; }
+  .verse-term .canon{ color:#9c9279; font-size:11.5px; }
+  .verse-term .vtext{ color:var(--parch3); margin-top:6px; }
+
+  /* ---------- SUPPORT ---------- */
+  .support{ margin-top:30px; }
+  .support-panel{
+    position:relative; background:
+      linear-gradient(180deg, #efe3c4, #ecdcb6);
+    border:6px solid var(--ink); box-shadow:10px 10px 0 rgba(28,23,18,.9);
+    padding:42px 36px; text-align:center;
+    display:flex; flex-direction:column; align-items:center; gap:18px;
+  }
+  .support-panel::after{ content:""; position:absolute; inset:6px; border:3px solid var(--gold); pointer-events:none; }
+  .support-panel img.pope{ width:120px; image-rendering:pixelated; }
+  .support-panel h2{ font-family:'Press Start 2P', monospace; font-size:clamp(15px,3vw,22px); color:var(--ink); margin:0; line-height:1.5; }
+  .support-panel p{ max-width:46ch; margin:0; color:var(--ink2); font-size:15px; line-height:1.65; }
+  .support-btns{ display:flex; gap:16px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ position:relative; z-index:1; text-align:center; padding:54px 24px 40px; }
+  footer .flinks{ display:flex; gap:22px; justify-content:center; flex-wrap:wrap; margin-bottom:18px; }
+  footer .flinks a{ font-family:'Press Start 2P', monospace; font-size:10px; color:var(--ink); text-decoration:none; border-bottom:3px solid var(--gold); padding-bottom:4px; }
+  footer .flinks a:hover{ color:var(--golddeep); }
+  footer .credits{ color:var(--ink2); font-size:12px; line-height:1.8; opacity:.85; }
+  footer .amen{ font-family:'Press Start 2P', monospace; font-size:10px; color:var(--golddeep); margin-top:16px; }
+
+  @media (max-width:720px){
+    .cards{ grid-template-columns:1fr; }
+    .topchips{ padding:0 30px; }
+    .hero .frame{ inset:14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero" data-screen-label="Hero">
+  <div class="frame"></div>
+  <div class="corner" style="left:18px; top:18px;"></div>
+  <div class="corner" style="right:18px; top:18px;"></div>
+  <div class="corner" style="left:18px; bottom:18px;"></div>
+  <div class="corner" style="right:18px; bottom:18px;"></div>
+
+  <div class="topchips">
+    <span class="chip">v1.0.2</span>
+    <span class="chip ghost">73 BOOKS</span>
+  </div>
+
+  <div class="hero-inner">
+    <div class="mascot-glow"><img class="px" src="assets/pawpe.png" alt="Pawpe Miau, the cat-holic Pope cat" /></div>
+    <h1 class="title">cathCLI</h1>
+    <div class="sub">PAWPE&nbsp;MIAU&nbsp;&nbsp;·&nbsp;&nbsp;CAT-HOLIC</div>
+    <p class="tag">The Holy Bible &amp; Catholic prayers, blessed straight into your terminal.</p>
+
+    <div class="cmd">
+      <span class="dollar">$</span>
+      <span class="txt" id="install-line">curl -fsSL https://raw.githubusercontent.com/clementinepujiutami/cathCLI/main/install.sh | bash</span>
+      <button class="copy" data-copy>COPY</button>
+    </div>
+    <div class="hero-btns">
+      <a class="btn ko" href="https://ko-fi.com/clemnomadlife" target="_blank" rel="noopener"><img class="px" src="assets/heart-cream.png" style="width:18px;" alt="" /> SUPPORT ON KO-FI</a>
+      <a class="btn ghost" href="https://github.com/clementinepujiutami/cathCLI" target="_blank" rel="noopener">★ GITHUB</a>
+    </div>
+    <div class="startline"><span class="blink">▸</span>&nbsp; INSERT BLESSING TO BEGIN</div>
+  </div>
+</header>
+
+<div class="div"><span class="line"></span><img class="px" src="assets/cross.png" alt="" /><span class="line"></span></div>
+
+<!-- ============ WHAT IT DOES ============ -->
+<section data-screen-label="What it does">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>HABEMUS PAPA-CAT</h2>
+      <p>One tiny command and Pawpe Miau fetches Scripture, leads the prayers, and keeps it all purring offline. Here's what's in his bowl.</p>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <img class="ico" src="assets/cross.png" alt="" />
+        <h3>READ THE WORD</h3>
+        <p>All <strong>73 books</strong> of the Catholic canon — including the 7 deuterocanonical ones (Tobit, Judith, Wisdom, Sirach, Baruch, 1 &amp; 2 Maccabees). Full <strong>NABRE</strong> translation.</p>
+        <div class="mini"><span class="dollar">$</span> cath read jn 3</div>
+      </div>
+
+      <div class="card">
+        <img class="ico" src="assets/heart.png" alt="" />
+        <h3>LET US PUUR-RAY</h3>
+        <p>The Our Father, Hail Mary, the Rosary, Divine Mercy Chaplet, Litany of Humility, the prayer to St&nbsp;Michael &amp; more — browse the purr-ayers or summon one by name.</p>
+        <div class="mini"><span class="dollar">$</span> cath pray "st michael"</div>
+      </div>
+
+      <div class="card">
+        <img class="ico" src="assets/spark.png" alt="" />
+        <h3>OFFLINE &amp; NO KEYS</h3>
+        <p>No API key, no fuss. Verses are cached in <code>~/.cathcli</code> after the first fetch, so the Word is with you even when the wifi isn't. Blessed be thy paws.</p>
+        <div class="mini"><span class="dollar">$</span> cath verse ps 23:1</div>
+      </div>
+
+      <div class="card">
+        <img class="ico" src="assets/cross.png" alt="" />
+        <h3>SEARCH &amp; SURPRISE</h3>
+        <p>Hunt your cached verses by keyword, or let Pawpe paw a random blessing from a curated pool when you need a little light.</p>
+        <div class="mini"><span class="dollar">$</span> cath search mercy</div>
+      </div>
+    </div>
+
+    <div class="term">
+      <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot g"></span><span class="ttl">pawpe@miau ~ a typical session</span></div>
+      <div class="body">
+<div><span class="g">$</span> cath read jn 3</div>
+<div class="ref">John 3 · NABRE</div>
+<div><span class="d">16</span>&nbsp; For God so loved the world that he gave his only Son, so that</div>
+<div><span class="d">&nbsp;&nbsp;</span>&nbsp; everyone who believes in him might not perish but have eternal life.</div>
+<div style="margin-top:12px;"><span class="g">$</span> cath pray "hail mary"</div>
+<div class="ref">Hail Mary</div>
+<div>Hail Mary, full of grace, the Lord is with thee&hellip;</div>
+<div style="margin-top:12px;"><span class="g">$</span> cath random<span class="cursor blink"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"><span class="line"></span><img class="px" src="assets/cross.png" alt="" /><span class="line"></span></div>
+
+<!-- ============ RANDOM VERSE ============ -->
+<section data-screen-label="Blessing">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>RECEIVE A BLESSING</h2>
+      <p>Go on — let Pawpe paw you a verse. (This is exactly what <code>cath&nbsp;random</code> does in your terminal.)</p>
+    </div>
+
+    <div class="bless">
+      <div class="term verse-term">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot g"></span><span class="ttl">pawpe@miau ~ cath random</span></div>
+        <div class="body">
+          <div><span class="g">$</span> cath random</div>
+          <div style="margin-top:10px;">
+            <span class="ref" id="v-ref">Psalms 23:1</span> &nbsp;<span class="canon" id="v-canon">[ Old Testament ]</span>
+            <div class="vtext" id="v-text">The LORD is my shepherd; there is nothing I lack.</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:26px;">
+        <button class="btn" id="bless-btn"><img class="px" src="assets/heart.png" style="width:18px;" alt="" /> PAW ME A VERSE</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div"><span class="line"></span><img class="px" src="assets/cross.png" alt="" /><span class="line"></span></div>
+
+<!-- ============ SUPPORT ============ -->
+<section class="support" data-screen-label="Support">
+  <div class="wrap">
+    <div class="support-panel">
+      <img class="pope" src="assets/pawpe.png" alt="Pawpe Miau" />
+      <h2>BUY PAWPE A TIN OF TUNA</h2>
+      <p>If Pawpe Miau has blessed your terminal, you can help keep his bowl full. cathCLI is a one-cat labour of love — every coin is a paw-tron's prayer. 🐾</p>
+      <div class="support-btns">
+        <a class="btn ko" href="https://ko-fi.com/clemnomadlife" target="_blank" rel="noopener"><img class="px" src="assets/heart-cream.png" style="width:18px;" alt="" /> SUPPORT ON KO-FI</a>
+        <a class="btn ghost" href="https://github.com/clementinepujiutami/cathCLI" target="_blank" rel="noopener">★ STAR ON GITHUB</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer data-screen-label="Footer">
+  <div class="wrap">
+    <div class="flinks">
+      <a href="https://github.com/clementinepujiutami/cathCLI" target="_blank" rel="noopener">GITHUB</a>
+      <a href="https://ko-fi.com/clemnomadlife" target="_blank" rel="noopener">KO-FI</a>
+      <a href="https://github.com/clementinepujiutami/cathCLI/releases/latest" target="_blank" rel="noopener">RELEASES</a>
+    </div>
+    <div class="credits">
+      Made with love &amp; catnip by Clementine Puji Utami · source-available.<br />
+      Scripture: NABRE © USCCB via BibleGet I/O · Prayers via mycatholic.life.
+    </div>
+    <div class="amen">MEOW &amp; AT THE HOUR OF OUR DEATH. AMEN. 🐾</div>
+  </div>
+</footer>
+
+<script>
+  // ---- copy install command ----
+  const INSTALL = "curl -fsSL https://raw.githubusercontent.com/clementinepujiutami/cathCLI/main/install.sh | bash";
+  document.querySelectorAll('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      navigator.clipboard?.writeText(INSTALL);
+      const old = btn.textContent;
+      btn.textContent = "BLESSED ✓";
+      setTimeout(() => { btn.textContent = old; }, 1500);
+    });
+  });
+
+  // ---- random verse blessing ----
+  const VERSES = [
+    { ref:"John 3:16",        canon:"New Testament",            text:"For God so loved the world that he gave his only Son, so that everyone who believes in him might not perish but have eternal life." },
+    { ref:"Psalms 23:1",      canon:"Old Testament",            text:"The LORD is my shepherd; there is nothing I lack." },
+    { ref:"Philippians 4:13", canon:"New Testament",            text:"I have the strength for everything through him who empowers me." },
+    { ref:"Isaiah 41:10",     canon:"Old Testament",            text:"Do not fear: I am with you; do not be anxious: I am your God." },
+    { ref:"Matthew 11:28",    canon:"New Testament",            text:"Come to me, all you who labor and are burdened, and I will give you rest." },
+    { ref:"Psalms 46:11",     canon:"Old Testament",            text:"Be still and know that I am God." },
+    { ref:"Romans 8:28",      canon:"New Testament",            text:"We know that all things work for good for those who love God." },
+    { ref:"Proverbs 3:5",     canon:"Old Testament",            text:"Trust in the LORD with all your heart, and lean not on your own understanding." },
+    { ref:"Wisdom 3:1",       canon:"Deuterocanonical",         text:"The souls of the just are in the hand of God, and no torment shall touch them." },
+    { ref:"Sirach 2:6",       canon:"Deuterocanonical",         text:"Trust in God, and he will help you; make your ways straight and hope in him." },
+    { ref:"Jeremiah 29:11",   canon:"Old Testament",            text:"For I know well the plans I have for you — plans for your welfare and not for woe, to give you a future of hope." },
+    { ref:"1 Corinthians 13:4", canon:"New Testament",          text:"Love is patient, love is kind. It is not jealous, it is not pompous." },
+    { ref:"Tobit 4:7",        canon:"Deuterocanonical",         text:"Give alms from your possessions. Do not turn your face away from any of the poor." },
+    { ref:"Lamentations 3:22", canon:"Old Testament",           text:"The LORD's acts of mercy are not exhausted, his compassion is not spent." },
+  ];
+  const refEl = document.getElementById('v-ref');
+  const canonEl = document.getElementById('v-canon');
+  const textEl = document.getElementById('v-text');
+  const btn = document.getElementById('bless-btn');
+  let last = 1, typing = null;
+
+  function showVerse(v){
+    refEl.textContent = v.ref;
+    canonEl.textContent = "[ " + v.canon + " ]";
+    clearInterval(typing);
+    const full = v.text;
+    textEl.textContent = "";
+    let i = 0;
+    typing = setInterval(() => {
+      textEl.textContent = full.slice(0, ++i);
+      if(i >= full.length) clearInterval(typing);
+    }, 14);
+  }
+  btn.addEventListener('click', () => {
+    let idx;
+    do { idx = Math.floor(Math.random() * VERSES.length); } while(idx === last);
+    last = idx;
+    showVerse(VERSES[idx]);
+    btn.classList.remove('pulse'); void btn.offsetWidth;
+  });
+</script>
+</body>
+</html>
