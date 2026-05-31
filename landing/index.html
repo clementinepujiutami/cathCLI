@@ -236,7 +236,7 @@
 
     <div class="cmd">
       <span class="dollar">$</span>
-      <span class="txt" id="install-line">curl -fsSL https://raw.githubusercontent.com/clementinepujiutami/cathCLI/main/install.sh | bash</span>
+      <span class="txt" id="install-line">npm install -g clementinepujiutami/cathCLI</span>
       <button class="copy" data-copy>COPY</button>
     </div>
     <div class="hero-btns">
@@ -341,15 +341,15 @@
       <p>Got a suggestion, spotted a bug in Pawpe's scroll, or just want to say hello? Every message is a blessing.</p>
     </div>
     <div class="ff-wrap">
-      <form class="ff" id="ff-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <form class="ff" id="ff-form" action="https://formspree.io/f/xeedwreo" method="POST">
         <div class="ff-row">
           <div class="ff-field">
             <label class="ff-label" for="ff-name">NAME <span class="ff-opt">(optional)</span></label>
-            <input class="ff-inp" id="ff-name" name="name" type="text" placeholder="Your name or handle..." autocomplete="off" />
+            <input class="ff-inp" id="ff-name" name="name" type="text" placeholder="Your name or handle..." autocomplete="off" data-fs-field />
           </div>
           <div class="ff-field">
             <label class="ff-label" for="ff-type">TYPE</label>
-            <select class="ff-inp" id="ff-type" name="type">
+            <select class="ff-inp" id="ff-type" name="type" data-fs-field>
               <option value="suggestion">✦ Suggestion</option>
               <option value="bug">✗ Bug Report</option>
               <option value="praise">♥ Praise</option>
@@ -359,10 +359,10 @@
         </div>
         <div class="ff-field">
           <label class="ff-label" for="ff-msg">MESSAGE <span class="ff-req">*</span></label>
-          <textarea class="ff-inp ff-ta" id="ff-msg" name="message" required placeholder="Type thy message here..."></textarea>
+          <textarea class="ff-inp ff-ta" id="ff-msg" name="message" required placeholder="Type thy message here..." data-fs-field></textarea>
         </div>
         <div class="ff-foot">
-          <button class="btn" type="submit" id="ff-submit">▸ SEND THY MESSAGE</button>
+          <button class="btn" type="submit" id="ff-submit" data-fs-submit-btn>▸ SEND THY MESSAGE</button>
           <p class="ff-privacy">No account needed. Goes straight to Pawpe's inbox.</p>
         </div>
       </form>
@@ -416,7 +416,7 @@
 
 <script>
   // ---- copy install command ----
-  const INSTALL = "curl -fsSL https://raw.githubusercontent.com/clementinepujiutami/cathCLI/main/install.sh | bash";
+  const INSTALL = "npm install -g clementinepujiutami/cathCLI";
   document.querySelectorAll('[data-copy]').forEach(btn => {
     btn.addEventListener('click', () => {
       navigator.clipboard?.writeText(INSTALL);
@@ -470,34 +470,41 @@
   });
 
   // ---- feedback form ----
-  const ffForm    = document.getElementById('ff-form');
-  const ffThanks  = document.getElementById('ff-thanks');
-  const ffSubmit  = document.getElementById('ff-submit');
-  if (ffForm) {
-    ffForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const orig = ffSubmit.textContent;
-      ffSubmit.textContent = 'SENDING...';
-      ffSubmit.disabled = true;
-      try {
-        const res = await fetch(ffForm.action, {
-          method: 'POST',
-          body: new FormData(ffForm),
-          headers: { 'Accept': 'application/json' },
-        });
-        if (res.ok) {
-          ffForm.hidden = true;
-          ffThanks.classList.add('show');
-        } else {
-          throw new Error('server');
-        }
-      } catch {
-        ffSubmit.textContent = orig;
-        ffSubmit.disabled = false;
-        alert("Pawpe couldn't deliver thy message. Try again?");
+  window.formspree = window.formspree || function () { (formspree.q = formspree.q || []).push(arguments); };
+  formspree('initForm', {
+    formElement: '#ff-form',
+    formId: 'xeedwreo',
+    onSubmit: () => {
+      const ffSubmit = document.getElementById('ff-submit');
+      if (ffSubmit) {
+        ffSubmit.dataset.origText = ffSubmit.textContent;
+        ffSubmit.textContent = 'SENDING...';
       }
-    });
-  }
+    },
+    onSuccess: () => {
+      const ffForm = document.getElementById('ff-form');
+      const ffThanks = document.getElementById('ff-thanks');
+      if (ffForm && ffThanks) {
+        ffForm.hidden = true;
+        ffThanks.classList.add('show');
+      }
+    },
+    onFailure: () => {
+      const ffSubmit = document.getElementById('ff-submit');
+      if (ffSubmit) {
+        ffSubmit.textContent = ffSubmit.dataset.origText || '▸ SEND THY MESSAGE';
+      }
+      alert("Pawpe couldn't deliver thy message. Try again?");
+    },
+    onError: () => {
+      const ffSubmit = document.getElementById('ff-submit');
+      if (ffSubmit) {
+        ffSubmit.textContent = ffSubmit.dataset.origText || '▸ SEND THY MESSAGE';
+      }
+      alert("Pawpe couldn't deliver thy message. Please verify fields and try again.");
+    }
+  });
 </script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 </body>
 </html>

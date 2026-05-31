@@ -4,3 +4,4 @@ bin/
 *.d.ts
 .env
 pnpm.config.cjs
+.vercel

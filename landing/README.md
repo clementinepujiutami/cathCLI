@@ -14,7 +14,7 @@ Real product facts (use verbatim — do not invent):
 - Repo: `https://github.com/clementinepujiutami/cathCLI`
 - Ko-fi: `https://ko-fi.com/clemnomadlife`
 - Releases: `https://github.com/clementinepujiutami/cathCLI/releases/latest`
-- Install (one-liner, recommended): `curl -fsSL https://raw.githubusercontent.com/clementinepujiutami/cathCLI/main/install.sh | bash`
+- Install (recommended): `npm install -g clementinepujiutami/cathCLI`
 - Version badge: `v1.0.2`
 - Author: Clementine Puji Utami · License: source-available
 - Data credits: Scripture = NABRE © USCCB via BibleGet I/O · Prayers via mycatholic.life

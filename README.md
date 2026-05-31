@@ -40,29 +40,41 @@ If Pawpe Miau blesses your terminal, you can support cathCLI on [Ko-fi](https://
 
 ## Install
 
-### Script (recommended — handles Node.js + pnpm automatically)
+The easiest way to install **cathCLI** is via **npm** (Node Package Manager).
+
+### 1. Via npm (Recommended)
+
+If you have Node.js installed, just run:
+
+```bash
+npm install -g clementinepujiutami/cathCLI
+```
+
+*(You can also use `pnpm` or `yarn` if you prefer!)*
+
+### 2. Standalone Binary (No Node.js Required)
+
+If you don't use Node.js, you can download a prebuilt binary directly:
+
+1. Go to the [Latest Releases](https://github.com/clementinepujiutami/cathCLI/releases/latest) page.
+2. Download the `cath-linux` binary.
+3. Make it executable and move it to your path:
+   ```bash
+   chmod +x cath-linux
+   sudo mv cath-linux /usr/local/bin/cath
+   ```
+
+### 3. Quick Install Script
+
+If you prefer a one-line automated script that handles the configuration for you:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/clementinepujiutami/cathCLI/main/install.sh | bash
 ```
 
-### Standalone binary (no Node.js required)
+---
 
-Download the prebuilt binary from [Releases](https://github.com/clementinepujiutami/cathCLI/releases/latest):
-
-```bash
-curl -LO https://github.com/clementinepujiutami/cathCLI/releases/latest/download/cath-linux
-chmod +x cath-linux
-sudo mv cath-linux /usr/local/bin/cath
-```
-
-### pnpm (manual)
-
-```bash
-pnpm install -g --force github:clementinepujiutami/cathCLI
-```
-
-Then run:
+Once installed, simply run:
 
 ```bash
 cath
