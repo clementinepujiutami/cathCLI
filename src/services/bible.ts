@@ -110,11 +110,31 @@ export async function searchVerses(keyword: string): Promise<BibleVerse[]> {
   const db = (await import('../db')).default;
   if (!db) return [];
 
-  const rows = db.prepare("SELECT data FROM verses WHERE data LIKE ? LIMIT 20")
-    .all(`%${keyword}%`) as { data: string }[];
+  const kw  = keyword.toLowerCase();
+  const pat = `%${keyword}%`;
+  const seen = new Set<string>();
+  const results: BibleVerse[] = [];
 
-  return rows.flatMap(r => {
-    const v = JSON.parse(r.data) as BibleVerse;
-    return v.text.toLowerCase().includes(keyword.toLowerCase()) ? [v] : [];
-  });
+  const add = (v: BibleVerse) => {
+    const key = `${v.book}${v.chapter}:${v.verse}`;
+    if (!seen.has(key) && v.text.toLowerCase().includes(kw)) {
+      seen.add(key);
+      results.push(v);
+    }
+  };
+
+  // Search cached individual verses
+  const verseRows = db.prepare('SELECT data FROM verses WHERE data LIKE ?')
+    .all(pat) as { data: string }[];
+  for (const r of verseRows) add(JSON.parse(r.data) as BibleVerse);
+
+  // Search cached chapters (each row holds all verses of a chapter as a JSON array)
+  const chapRows = db.prepare('SELECT data FROM chapters WHERE data LIKE ?')
+    .all(pat) as { data: string }[];
+  for (const r of chapRows) {
+    const verses = JSON.parse(r.data) as BibleVerse[];
+    for (const v of verses) add(v);
+  }
+
+  return results.slice(0, 30);
 }
