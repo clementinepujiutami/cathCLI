@@ -41,7 +41,27 @@ const inquirer_1 = __importDefault(require("inquirer"));
 const prayers_1 = require("../data/prayers");
 const prayers_2 = require("../services/prayers");
 const art_1 = require("../ui/art");
+const card_1 = require("../ui/card");
+const pawpe_1 = require("../ui/figures/pawpe");
 const sound_1 = require("../ui/sound");
+const CATEGORY_LABEL = {
+    daily: 'Daily Prayer',
+    marian: 'Marian Prayer',
+    devotion: 'Devotional Prayer',
+    litany: 'Litany',
+    rosary: 'The Rosary',
+    chaplet: 'Chaplet',
+    novena: 'Novena',
+};
+// Every card currently shows the mascot. Once the figure pipeline lands this
+// picks art per prayer, falling back to the prayer's category.
+function showPrayer(p) {
+    console.log((0, card_1.prayerCard)(p.title, p.text, {
+        category: CATEGORY_LABEL[p.category],
+        art: pawpe_1.pawpe,
+        tags: ['BUILT-IN'],
+    }));
+}
 function registerPray(program) {
     program
         .command('pray [name]')
@@ -51,7 +71,7 @@ function registerPray(program) {
         if (name) {
             const builtin = (0, prayers_1.findPrayer)(name);
             if (builtin) {
-                console.log((0, art_1.prayerBox)(builtin.title, builtin.text));
+                showPrayer(builtin);
                 return;
             }
             // Try scraping from mycatholic.life
@@ -61,7 +81,11 @@ function registerPray(program) {
             try {
                 const scraped = await (0, prayers_2.getScrapedPrayer)(name);
                 spinner.stop();
-                console.log((0, art_1.prayerBox)(scraped.title, scraped.text));
+                console.log((0, card_1.prayerCard)(scraped.title, scraped.text, {
+                    category: 'Prayer',
+                    art: pawpe_1.pawpe,
+                    tags: ['MYCATHOLIC.LIFE'],
+                }));
             }
             catch (err) {
                 spinner.stop();
@@ -97,8 +121,7 @@ function registerPray(program) {
                 message: art_1.C.cream('Select a prayer:'),
                 choices: prayerChoices,
             }]);
-        const prayer = (0, prayers_1.findPrayer)(prayerId);
-        console.log((0, art_1.prayerBox)(prayer.title, prayer.text));
+        showPrayer((0, prayers_1.findPrayer)(prayerId));
     });
 }
 //# sourceMappingURL=pray.js.map

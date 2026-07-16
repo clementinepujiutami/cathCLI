@@ -1,9 +1,33 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
-import { BUILTIN_PRAYERS, findPrayer, prayersByCategory } from '../data/prayers';
+import { BUILTIN_PRAYERS, findPrayer, prayersByCategory, Prayer } from '../data/prayers';
 import { getScrapedPrayer } from '../services/prayers';
-import { C, prayerBox, sectionHeader } from '../ui/art';
+import { C, sectionHeader } from '../ui/art';
+import { prayerCard } from '../ui/card';
+import { pawpe } from '../ui/figures/pawpe';
 import { soundPrayer } from '../ui/sound';
+
+const CATEGORY_LABEL: Record<Prayer['category'], string> = {
+  daily: 'Daily Prayer',
+  marian: 'Marian Prayer',
+  devotion: 'Devotional Prayer',
+  litany: 'Litany',
+  rosary: 'The Rosary',
+  chaplet: 'Chaplet',
+  novena: 'Novena',
+};
+
+// Every card currently shows the mascot. Once the figure pipeline lands this
+// picks art per prayer, falling back to the prayer's category.
+function showPrayer(p: Prayer) {
+  console.log(
+    prayerCard(p.title, p.text, {
+      category: CATEGORY_LABEL[p.category],
+      art: pawpe,
+      tags: ['BUILT-IN'],
+    })
+  );
+}
 
 export function registerPray(program: Command) {
   program
@@ -15,7 +39,7 @@ export function registerPray(program: Command) {
       if (name) {
         const builtin = findPrayer(name);
         if (builtin) {
-          console.log(prayerBox(builtin.title, builtin.text));
+          showPrayer(builtin);
           return;
         }
 
@@ -26,7 +50,13 @@ export function registerPray(program: Command) {
         try {
           const scraped = await getScrapedPrayer(name);
           spinner.stop();
-          console.log(prayerBox(scraped.title, scraped.text));
+          console.log(
+            prayerCard(scraped.title, scraped.text, {
+              category: 'Prayer',
+              art: pawpe,
+              tags: ['MYCATHOLIC.LIFE'],
+            })
+          );
         } catch (err: any) {
           spinner.stop();
           console.error(C.red(`\n  ✗ Prayer not found: ${err.message}`));
@@ -67,7 +97,6 @@ export function registerPray(program: Command) {
         choices: prayerChoices,
       }]);
 
-      const prayer = findPrayer(prayerId)!;
-      console.log(prayerBox(prayer.title, prayer.text));
+      showPrayer(findPrayer(prayerId)!);
     });
 }
