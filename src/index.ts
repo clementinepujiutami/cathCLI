@@ -13,10 +13,20 @@ import { registerSearch } from './cmd/search';
 
 const program = new Command();
 
+// Read the real version rather than a literal: the hardcoded one sat at 1.0.0
+// for two releases and made `cath --version` useless for telling builds apart.
+function version(): string {
+  try {
+    return require('../package.json').version as string;
+  } catch {
+    return '0.0.0-dev';
+  }
+}
+
 program
   .name('cath')
   .description('Holy Bible (Catholic Canon — NABRE) & Catholic Prayers')
-  .version('1.0.0');
+  .version(version());
 
 registerBooks(program);
 registerRead(program);

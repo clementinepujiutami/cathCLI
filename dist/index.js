@@ -13,10 +13,20 @@ const pray_1 = require("./cmd/pray");
 const random_1 = require("./cmd/random");
 const search_1 = require("./cmd/search");
 const program = new commander_1.Command();
+// Read the real version rather than a literal: the hardcoded one sat at 1.0.0
+// for two releases and made `cath --version` useless for telling builds apart.
+function version() {
+    try {
+        return require('../package.json').version;
+    }
+    catch {
+        return '0.0.0-dev';
+    }
+}
 program
     .name('cath')
     .description('Holy Bible (Catholic Canon — NABRE) & Catholic Prayers')
-    .version('1.0.0');
+    .version(version());
 (0, books_1.registerBooks)(program);
 (0, read_1.registerRead)(program);
 (0, verse_1.registerVerse)(program);

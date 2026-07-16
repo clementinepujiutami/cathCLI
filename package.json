@@ -19,7 +19,8 @@
   },
   "pkg": {
     "assets": [
-      "dist/**/*"
+      "dist/**/*",
+      "package.json"
     ],
     "targets": [
       "node22-linux-x64"
