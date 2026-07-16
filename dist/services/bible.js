@@ -48,11 +48,39 @@ const db_1 = require("../db");
 const BASE = 'https://query.bibleget.io/v3/';
 const APP_ID = 'cathCLI';
 const VERSION = 'NABRE';
-async function bibleget(query) {
+const TIMEOUT_MS = 8000;
+const MAX_RETRIES = 1;
+async function fetchWithTimeout(url) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+    try {
+        return await (0, node_fetch_1.default)(url, { signal: ctrl.signal });
+    }
+    catch (err) {
+        if (err.name === 'AbortError')
+            throw new Error('Request timed out after 8s. Check your connection.');
+        throw err;
+    }
+    finally {
+        clearTimeout(timer);
+    }
+}
+async function bibleget(query, attempt = 0) {
     const url = `${BASE}?query=${encodeURIComponent(query)}&version=${VERSION}&appid=${APP_ID}&return=json`;
-    const res = await (0, node_fetch_1.default)(url);
-    if (!res.ok)
+    let res;
+    try {
+        res = await fetchWithTimeout(url);
+    }
+    catch (err) {
+        if (attempt < MAX_RETRIES)
+            return bibleget(query, attempt + 1);
+        throw err;
+    }
+    if (!res.ok) {
+        if (attempt < MAX_RETRIES && res.status >= 500)
+            return bibleget(query, attempt + 1);
         throw new Error(`BibleGet error: HTTP ${res.status}`);
+    }
     const data = await res.json();
     if (data.errors?.length) {
         const errs = data.errors;
@@ -78,24 +106,40 @@ async function getChapter(bookAbbr, chapter) {
     const hit = db_1.cache.getChapter(ref);
     if (hit)
         return hit;
-    const results = await bibleget(`${bookAbbr}${chapter}`);
-    if (!results.length)
-        throw new Error(`No results for ${bookAbbr} ${chapter}`);
-    const verses = results.map(toVerse);
-    db_1.cache.setChapter(ref, verses);
-    return verses;
+    try {
+        const results = await bibleget(`${bookAbbr}${chapter}`);
+        if (!results.length)
+            throw new Error(`No results for ${bookAbbr} ${chapter}`);
+        const verses = results.map(toVerse);
+        db_1.cache.setChapter(ref, verses);
+        return verses;
+    }
+    catch (err) {
+        const stale = db_1.cache.getStaleChapter(ref);
+        if (stale)
+            return stale;
+        throw err;
+    }
 }
 async function getVerse(bookAbbr, chapter, verse) {
     const ref = `${bookAbbr}${chapter}:${verse}`;
     const hit = db_1.cache.getVerse(ref);
     if (hit)
         return hit;
-    const results = await bibleget(ref);
-    if (!results.length)
-        throw new Error(`Verse not found: ${ref}`);
-    const v = toVerse(results[0]);
-    db_1.cache.setVerse(ref, v);
-    return v;
+    try {
+        const results = await bibleget(ref);
+        if (!results.length)
+            throw new Error(`Verse not found: ${ref}`);
+        const v = toVerse(results[0]);
+        db_1.cache.setVerse(ref, v);
+        return v;
+    }
+    catch (err) {
+        const stale = db_1.cache.getStaleVerse(ref);
+        if (stale)
+            return stale;
+        throw err;
+    }
 }
 // Random from a curated pool of beloved Catholic verses
 const POOL = [
@@ -108,10 +152,18 @@ const POOL = [
 ];
 async function getRandomVerse() {
     const query = POOL[Math.floor(Math.random() * POOL.length)];
-    const results = await bibleget(query);
-    if (!results.length)
-        throw new Error('Could not fetch random verse');
-    return toVerse(results[0]);
+    try {
+        const results = await bibleget(query);
+        if (!results.length)
+            throw new Error('Could not fetch random verse');
+        return toVerse(results[0]);
+    }
+    catch {
+        const cached = db_1.cache.getAnyVerse();
+        if (cached)
+            return cached;
+        throw new Error('Unable to fetch a verse. Please check your internet connection.');
+    }
 }
 async function searchVerses(keyword) {
     const db = (await Promise.resolve().then(() => __importStar(require('../db')))).default;

@@ -81,6 +81,7 @@ function registerPray(program) {
             { name: `${art_1.C.gold('Litanies')}            (${cats.litany.length})`, value: 'litany' },
             { name: `${art_1.C.gold('The Rosary')}          (${cats.rosary.length})`, value: 'rosary' },
             { name: `${art_1.C.gold('Chaplets')}            (${cats.chaplet.length})`, value: 'chaplet' },
+            { name: `${art_1.C.gold('Novenas')}             (${cats.novena.length})`, value: 'novena' },
         ];
         const { category } = await inquirer_1.default.prompt([{
                 type: 'list',

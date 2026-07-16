@@ -46,6 +46,11 @@ export const cache = {
     if (!row || Date.now() - row.at > TTL) return null;
     return JSON.parse(row.data);
   },
+  getStaleChapter: (ref: string) => {
+    if (!db) return null;
+    const row = db.prepare('SELECT data FROM chapters WHERE ref=?').get(ref) as any;
+    return row ? JSON.parse(row.data) : null;
+  },
   setChapter: (ref: string, data: unknown) => {
     if (!db) return;
     db.prepare('INSERT OR REPLACE INTO chapters(ref,data,at) VALUES(?,?,?)')
@@ -57,6 +62,11 @@ export const cache = {
     const row = db.prepare('SELECT data,at FROM verses WHERE ref=?').get(ref) as any;
     if (!row || Date.now() - row.at > TTL) return null;
     return JSON.parse(row.data);
+  },
+  getStaleVerse: (ref: string) => {
+    if (!db) return null;
+    const row = db.prepare('SELECT data FROM verses WHERE ref=?').get(ref) as any;
+    return row ? JSON.parse(row.data) : null;
   },
   setVerse: (ref: string, data: unknown) => {
     if (!db) return;
@@ -70,10 +80,21 @@ export const cache = {
     if (!row || Date.now() - row.at > TTL) return null;
     return { title: row.title, text: row.text };
   },
+  getStalePrayer: (name: string) => {
+    if (!db) return null;
+    const row = db.prepare('SELECT title,text FROM prayers WHERE name=?').get(name) as any;
+    return row ? { title: row.title as string, text: row.text as string } : null;
+  },
   setPrayer: (name: string, title: string, text: string) => {
     if (!db) return;
     db.prepare('INSERT OR REPLACE INTO prayers(name,title,text,at) VALUES(?,?,?,?)')
       .run(name, title, text, Date.now());
+  },
+
+  getAnyVerse: () => {
+    if (!db) return null;
+    const row = db.prepare('SELECT data FROM verses ORDER BY RANDOM() LIMIT 1').get() as any;
+    return row ? JSON.parse(row.data) : null;
   },
 };
 

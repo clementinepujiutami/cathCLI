@@ -5,9 +5,24 @@
 import fetch from 'node-fetch';
 import { cache } from '../db';
 
-const BASE    = 'https://query.bibleget.io/v3/';
-const APP_ID  = 'cathCLI';
-const VERSION = 'NABRE';
+const BASE        = 'https://query.bibleget.io/v3/';
+const APP_ID      = 'cathCLI';
+const VERSION     = 'NABRE';
+const TIMEOUT_MS  = 8000;
+const MAX_RETRIES = 1;
+
+async function fetchWithTimeout(url: string) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  try {
+    return await fetch(url, { signal: ctrl.signal as any });
+  } catch (err: any) {
+    if (err.name === 'AbortError') throw new Error('Request timed out after 8s. Check your connection.');
+    throw err;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 export interface BibleVerse {
   book:      string;
@@ -36,10 +51,19 @@ interface BibleGetResponse {
   info:    Record<string, unknown>;
 }
 
-async function bibleget(query: string): Promise<BibleGetResult[]> {
+async function bibleget(query: string, attempt = 0): Promise<BibleGetResult[]> {
   const url = `${BASE}?query=${encodeURIComponent(query)}&version=${VERSION}&appid=${APP_ID}&return=json`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`BibleGet error: HTTP ${res.status}`);
+  let res: Awaited<ReturnType<typeof fetchWithTimeout>>;
+  try {
+    res = await fetchWithTimeout(url);
+  } catch (err: any) {
+    if (attempt < MAX_RETRIES) return bibleget(query, attempt + 1);
+    throw err;
+  }
+  if (!res.ok) {
+    if (attempt < MAX_RETRIES && res.status >= 500) return bibleget(query, attempt + 1);
+    throw new Error(`BibleGet error: HTTP ${res.status}`);
+  }
   const data = await res.json() as BibleGetResponse;
   if (data.errors?.length) {
     const errs = data.errors as string[];
@@ -68,12 +92,17 @@ export async function getChapter(bookAbbr: string, chapter: number): Promise<Bib
   const hit = cache.getChapter(ref);
   if (hit) return hit as BibleVerse[];
 
-  const results = await bibleget(`${bookAbbr}${chapter}`);
-  if (!results.length) throw new Error(`No results for ${bookAbbr} ${chapter}`);
-
-  const verses = results.map(toVerse);
-  cache.setChapter(ref, verses);
-  return verses;
+  try {
+    const results = await bibleget(`${bookAbbr}${chapter}`);
+    if (!results.length) throw new Error(`No results for ${bookAbbr} ${chapter}`);
+    const verses = results.map(toVerse);
+    cache.setChapter(ref, verses);
+    return verses;
+  } catch (err) {
+    const stale = cache.getStaleChapter(ref);
+    if (stale) return stale as BibleVerse[];
+    throw err;
+  }
 }
 
 export async function getVerse(bookAbbr: string, chapter: number, verse: number): Promise<BibleVerse> {
@@ -81,12 +110,17 @@ export async function getVerse(bookAbbr: string, chapter: number, verse: number)
   const hit = cache.getVerse(ref);
   if (hit) return hit as BibleVerse;
 
-  const results = await bibleget(ref);
-  if (!results.length) throw new Error(`Verse not found: ${ref}`);
-
-  const v = toVerse(results[0]);
-  cache.setVerse(ref, v);
-  return v;
+  try {
+    const results = await bibleget(ref);
+    if (!results.length) throw new Error(`Verse not found: ${ref}`);
+    const v = toVerse(results[0]);
+    cache.setVerse(ref, v);
+    return v;
+  } catch (err) {
+    const stale = cache.getStaleVerse(ref);
+    if (stale) return stale as BibleVerse;
+    throw err;
+  }
 }
 
 // Random from a curated pool of beloved Catholic verses
@@ -101,9 +135,15 @@ const POOL = [
 
 export async function getRandomVerse(): Promise<BibleVerse> {
   const query = POOL[Math.floor(Math.random() * POOL.length)];
-  const results = await bibleget(query);
-  if (!results.length) throw new Error('Could not fetch random verse');
-  return toVerse(results[0]);
+  try {
+    const results = await bibleget(query);
+    if (!results.length) throw new Error('Could not fetch random verse');
+    return toVerse(results[0]);
+  } catch {
+    const cached = cache.getAnyVerse();
+    if (cached) return cached as BibleVerse;
+    throw new Error('Unable to fetch a verse. Please check your internet connection.');
+  }
 }
 
 export async function searchVerses(keyword: string): Promise<BibleVerse[]> {

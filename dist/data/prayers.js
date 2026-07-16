@@ -2838,6 +2838,295 @@ have mercy on the souls in Purgatory."
 
 When you have completed all 5 decades, say 3 times the
 Glory Be...`
+    },
+    {
+        id: 'novena-to-holy-spirit',
+        title: 'Novena to the Holy Spirit',
+        category: 'novena',
+        text: `Pray for 9 consecutive days, asking the Holy Spirit to descend upon you.
+
+OPENING PRAYER (each day):
+Come, Holy Spirit, fill the hearts of Your faithful
+and kindle in them the fire of Your love.
+Send forth Your Spirit and they shall be created.
+And You shall renew the face of the earth.
+
+O God, who by the light of the Holy Spirit did instruct the hearts of the faithful,
+grant that by the same Holy Spirit we may be truly wise
+and ever enjoy His consolations.
+Through Christ Our Lord. Amen.
+
+─────────────────────────────────────────────
+
+DAY 1 — Holy Spirit, Spirit of Wisdom
+Holy Spirit, Spirit of Wisdom, enlighten my mind to know You more fully,
+and guide my steps in the paths of holiness. Amen.
+
+DAY 2 — Holy Spirit, Spirit of Understanding
+Holy Spirit, Spirit of Understanding, open my heart to grasp
+the deep truths of faith and the love of God. Amen.
+
+DAY 3 — Holy Spirit, Spirit of Counsel
+Holy Spirit, Spirit of Counsel, guide me in my decisions
+and be my light in times of uncertainty. Amen.
+
+DAY 4 — Holy Spirit, Spirit of Fortitude
+Holy Spirit, Spirit of Fortitude, strengthen me to do good,
+to resist temptation, and to persevere in holiness. Amen.
+
+DAY 5 — Holy Spirit, Spirit of Knowledge
+Holy Spirit, Spirit of Knowledge, teach me to know the things of God
+and to see His presence in all creation. Amen.
+
+DAY 6 — Holy Spirit, Spirit of Piety
+Holy Spirit, Spirit of Piety, fill my heart with devotion and love,
+that I may worship the Father in spirit and truth. Amen.
+
+DAY 7 — Holy Spirit, Spirit of Fear of the Lord
+Holy Spirit, Spirit of holy Fear, help me to reverence God above all things
+and to love Him with a pure and humble heart. Amen.
+
+DAY 8 — Holy Spirit, Giver of Gifts
+Holy Spirit, pour out Your seven gifts upon me.
+Make me a vessel of Your grace, filled to overflowing with Your love and peace. Amen.
+
+DAY 9 — Holy Spirit, Come!
+Come, Holy Spirit! Come as holy fire and burn in us.
+Come as holy wind and cleanse us. Come as holy light and lead us.
+Come as holy truth and teach us. Come as holy love and dwell in us.
+Come as holy power and enable us. Come as holy life and move in us.
+We beseech You, O Lord, to fulfill our lives with Your Spirit's presence.
+Amen.
+
+─────────────────────────────────────────────
+
+CLOSING PRAYER (each day):
+Heavenly Father, I ask this in the name of Jesus Christ,
+who promised to send the Comforter, the Holy Spirit, to those who ask.
+Let Your Spirit descend upon me anew each day of this novena.
+May I be transformed by Your love and made new in Your grace.
+Through Christ Our Lord. Amen.`
+    },
+    {
+        id: 'novena-to-our-lady-of-perpetual-help',
+        title: 'Novena to Our Lady of Perpetual Help',
+        category: 'novena',
+        text: `Pray this prayer for 9 consecutive days, placing your intentions before Our Lady.
+
+OPENING PRAYER (each day):
+O Mother of Perpetual Help,
+thou art the dispenser of all the gifts which God grants to us miserable sinners;
+and for this end He has made thee so powerful, so rich, and so bountiful,
+in order that thou mayest help us in our misery.
+Thou art the advocate of the most wretched and abandoned sinners who have recourse to thee.
+Come to my help, dearest Mother.
+
+─────────────────────────────────────────────
+
+DAILY NOVENA PRAYER:
+O Mother of Perpetual Help,
+I come to kneel before your holy icon
+and to pour out my heart to you.
+You see my needs, you know my struggles.
+In your hands I place this intention:
+[mention your intention here]
+
+As a mother never abandons her child,
+so I trust you will never abandon me.
+You are my refuge and my hope.
+Intercede for me before the throne of God.
+
+O Mary, help of the helpless, refuge of sinners,
+comforter of the afflicted — pray for me.
+Show that you are my Mother,
+and may Jesus experience the prayer of His Mother on my behalf.
+Amen.
+
+─────────────────────────────────────────────
+
+CLOSING PRAYER (each day):
+Most Holy Virgin, who pleased the Lord
+and became His mother, immaculate in body and soul,
+in faith and in love: look down on me as I kneel before you,
+asking you to intercede for me with God.
+In your generous care, look upon me with the eyes of a Mother
+and obtain for me from the Sacred Heart of Jesus
+the graces and favors I ask through this novena.
+Amen.`
+    },
+    {
+        id: 'novena-to-saint-joseph',
+        title: 'Novena to Saint Joseph',
+        category: 'novena',
+        text: `Pray for 9 consecutive days, invoking the intercession of Saint Joseph.
+
+OPENING PRAYER (each day):
+O glorious Saint Joseph,
+faithful guardian of Jesus, chaste spouse of Mary,
+I pray with confidence to thy fatherly heart.
+Through thy powerful intercession, obtain for me
+what I ask in this novena.
+
+─────────────────────────────────────────────
+
+DAILY NOVENA PRAYER:
+O Saint Joseph, by the love thou bore for Jesus and Mary,
+help me in all my necessities.
+Thou who didst care for the Holy Family,
+watch over my family and all those I love.
+Thou who didst provide through faith and labor,
+help me in my needs:
+[mention your intention here]
+
+O glorious Joseph, by the grace of thy holy death —
+for thou didst die in the arms of Jesus and Mary —
+obtain for me the grace of a holy life and a blessed death.
+Blessed Joseph, dear patron of the universal Church,
+remember me before the throne of God.
+
+─────────────────────────────────────────────
+
+PRAYER FOR EACH DAY:
+To thee, O Blessed Joseph, do we come in our tribulation,
+and having implored the help of thy thrice holy Spouse,
+we confidently invoke thy patronage also.
+Through that charity which bound thee to the Immaculate Virgin Mother of God
+and through the paternal love with which thou embracedst the Child Jesus,
+we humbly beg thee graciously to regard the inheritance
+which Jesus Christ has purchased by His Blood,
+and with thy power and strength to aid us in our necessities.
+Amen.
+
+─────────────────────────────────────────────
+
+CLOSING PRAYER (each day):
+O faithful Saint Joseph, ever intercede for me.
+May I follow your example of humble obedience, pure love,
+and courageous trust in God's providence.
+Help me to fulfill my own vocation faithfully,
+as you fulfilled yours.
+Amen.`
+    },
+    {
+        id: 'novena-to-saint-jude',
+        title: 'Novena to Saint Jude (Patron of Hopeless Causes)',
+        category: 'novena',
+        text: `Pray for 9 consecutive days. Saint Jude Thaddeus is the patron of hopeless causes.
+
+OPENING PRAYER (each day):
+O most holy Apostle, Saint Jude, faithful servant and friend of Jesus,
+the Church honors and invokes you universally as the patron
+of hopeless cases, of things almost despaired of.
+Pray for me, I am so helpless and alone.
+
+─────────────────────────────────────────────
+
+DAILY NOVENA PRAYER:
+Make use, I implore you, of that particular privilege given to you
+to bring visible and speedy help where help is almost despaired of.
+Come to my assistance in this great need,
+that I may receive the consolation and succor of heaven
+in all my necessities, tribulations, and sufferings,
+particularly in this intention:
+[mention your intention here]
+
+and that I may praise God with you and all the elect throughout eternity.
+I promise, O Blessed Jude, to be ever mindful of this great favor,
+to always honor you as my special and powerful patron,
+and to gratefully encourage devotion to you.
+Amen.
+
+─────────────────────────────────────────────
+
+PRAYER TO SAINT JUDE:
+Saint Jude, apostle and martyr, great in virtue and rich in miracles,
+near kinsman of Jesus Christ, faithful intercessor of all who invoke your special patronage
+in time of need — to you I have recourse from the depth of my heart
+and humbly beg you, to whom God has given such great power,
+to come to my assistance.
+
+Help me in my present and urgent petition —
+in return I promise to make your name known and cause you to be invoked.
+Saint Jude, pray for us, and for all who invoke your aid.
+Amen.
+
+─────────────────────────────────────────────
+
+CLOSING PRAYER (each day):
+Lord Jesus, You chose Jude Thaddeus to be among Your twelve apostles.
+Through his intercession, I place my impossible needs before You.
+Nothing is impossible for You, Lord.
+I trust in Your goodness and Your mercy.
+Amen.`
+    },
+    {
+        id: 'novena-for-the-deceased',
+        title: 'Novena for the Deceased',
+        category: 'novena',
+        text: `Pray for 9 consecutive days for the souls of the faithful departed.
+
+OPENING PRAYER (each day):
+O God, the Creator and Redeemer of all the faithful,
+grant to the souls of Thy departed servants
+full remission of all their sins,
+that through pious supplications they may obtain
+the pardon which they have always desired.
+Who livest and reignest world without end. Amen.
+
+─────────────────────────────────────────────
+
+DAILY NOVENA PRAYER:
+O gentle Heart of Jesus, ever present in the Blessed Sacrament,
+ever consumed with burning love for the poor captive souls in Purgatory,
+have mercy on the soul of Thy departed servant(s):
+[mention the deceased by name]
+
+Be not severe in Thy judgment, but let some drops of Thy Precious Blood
+fall upon the devouring flames.
+And do Thou, O merciful Savior, send Thy holy Angels to conduct them
+to a place of refreshment, light, and peace.
+Amen.
+
+─────────────────────────────────────────────
+
+PRAYER FOR EACH DAY:
+Eternal rest grant unto them, O Lord,
+and let perpetual light shine upon them.
+May their souls, and the souls of all the faithful departed,
+through the mercy of God, rest in peace.
+Amen.
+
+May the souls of the faithful departed rest in peace.
+May they know the joyful vision of God.
+May they be freed from all pain and sorrow.
+May the mercy of God bring them to eternal light.
+Amen.
+
+─────────────────────────────────────────────
+
+DE PROFUNDIS (Psalm 130):
+Out of the depths I cry to You, O LORD;
+O Lord, hear my voice.
+Let Your ears be attentive to my cry for mercy.
+
+If You, O LORD, kept a record of sins,
+O Lord, who could stand?
+But with You there is forgiveness;
+therefore You are feared.
+
+I wait for the LORD, my soul waits,
+and in His word I put my hope.
+My soul waits for the Lord
+more than watchmen wait for the morning.
+
+O Israel, put your hope in the LORD,
+for with the LORD is unfailing love
+and with Him is full redemption.
+He Himself will redeem Israel from all their sins.
+
+Eternal rest grant unto them, O Lord,
+and let perpetual light shine upon them.
+Amen.`
     }
 ];
 function findPrayer(query) {
@@ -2860,6 +3149,7 @@ function prayersByCategory() {
         litany: exports.BUILTIN_PRAYERS.filter(p => p.category === 'litany'),
         rosary: exports.BUILTIN_PRAYERS.filter(p => p.category === 'rosary'),
         chaplet: exports.BUILTIN_PRAYERS.filter(p => p.category === 'chaplet'),
+        novena: exports.BUILTIN_PRAYERS.filter(p => p.category === 'novena'),
     };
     return categories;
 }

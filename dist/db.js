@@ -51,6 +51,12 @@ exports.cache = {
             return null;
         return JSON.parse(row.data);
     },
+    getStaleChapter: (ref) => {
+        if (!db)
+            return null;
+        const row = db.prepare('SELECT data FROM chapters WHERE ref=?').get(ref);
+        return row ? JSON.parse(row.data) : null;
+    },
     setChapter: (ref, data) => {
         if (!db)
             return;
@@ -64,6 +70,12 @@ exports.cache = {
         if (!row || Date.now() - row.at > TTL)
             return null;
         return JSON.parse(row.data);
+    },
+    getStaleVerse: (ref) => {
+        if (!db)
+            return null;
+        const row = db.prepare('SELECT data FROM verses WHERE ref=?').get(ref);
+        return row ? JSON.parse(row.data) : null;
     },
     setVerse: (ref, data) => {
         if (!db)
@@ -79,11 +91,23 @@ exports.cache = {
             return null;
         return { title: row.title, text: row.text };
     },
+    getStalePrayer: (name) => {
+        if (!db)
+            return null;
+        const row = db.prepare('SELECT title,text FROM prayers WHERE name=?').get(name);
+        return row ? { title: row.title, text: row.text } : null;
+    },
     setPrayer: (name, title, text) => {
         if (!db)
             return;
         db.prepare('INSERT OR REPLACE INTO prayers(name,title,text,at) VALUES(?,?,?,?)')
             .run(name, title, text, Date.now());
+    },
+    getAnyVerse: () => {
+        if (!db)
+            return null;
+        const row = db.prepare('SELECT data FROM verses ORDER BY RANDOM() LIMIT 1').get();
+        return row ? JSON.parse(row.data) : null;
     },
 };
 exports.default = db;
