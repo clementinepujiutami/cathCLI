@@ -1,4 +1,6 @@
 import chalk from 'chalk';
+import { renderHalfBlocks, artWidth } from './render';
+import { pawpe } from './figures/pawpe';
 
 // ── Color palette (from pixel art reference) ────────────────────────────────
 export const C = {
@@ -13,49 +15,13 @@ export const C = {
   bold:   (s: string) => chalk.bold(s),
 };
 
-// ── Pixel-art mascot: Pawpe Miau (cath = cat-holic) ─────────────────────────
-// Each "pixel" = 2 terminal chars wide for square proportions
-function px(color: (s: string) => string): string {
-  return color('██');
-}
-
-const _  = '  ';          // empty pixel (1 unit)
-const K  = px(C.skin);    // orange tabby fur
-const M  = px(C.cream);   // bishop mitre
-const G  = px(C.gold);    // gold trim
-const R  = px(C.red);     // red vestments
-const Ey = px(C.sky);     // sky-blue eyes
-const Ns = px(C.gold);    // gold nose
-const Ie = px(C.brown);   // tabby stripes / inner detail
-const W  = px(C.white);   // collar
-
-export function catArt(): string[] {
-  return [
-    `${_}${_}${_}${_}${_}${_}${_}${M}${M}${_}${_}${_}${_}${_}${_}${_}`,
-    `${_}${_}${_}${_}${_}${_}${M}${M}${M}${M}${_}${_}${_}${_}${_}${_}`,
-    `${_}${_}${_}${_}${_}${M}${M}${G}${G}${M}${M}${_}${_}${_}${_}${_}`,
-    `${_}${_}${_}${_}${M}${M}${G}${G}${G}${G}${M}${M}${_}${_}${_}${_}`,
-    `${_}${_}${_}${M}${M}${G}${M}${G}${G}${M}${G}${M}${M}${_}${_}${_}`,
-    `${_}${_}${M}${M}${M}${M}${M}${M}${M}${M}${M}${M}${M}${M}${_}${_}`,
-    `${_}${_}${G}${G}${G}${G}${G}${G}${G}${G}${G}${G}${G}${G}${_}${_}`,
-    `${_}${K}${K}${Ie}${Ie}${K}${K}${K}${K}${K}${K}${Ie}${Ie}${K}${K}${_}`,
-    `${K}${K}${K}${Ie}${K}${K}${K}${K}${K}${K}${K}${K}${Ie}${K}${K}${K}`,
-    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}`,
-    `${K}${K}${K}${Ey}${K}${K}${K}${K}${K}${K}${K}${Ey}${K}${K}${K}${K}`,
-    `${K}${K}${K}${K}${K}${K}${Ns}${Ns}${K}${K}${K}${K}${K}${K}${K}${K}`,
-    `${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}`,
-    `${_}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${_}`,
-    `${R}${R}${R}${R}${R}${W}${W}${W}${W}${W}${W}${R}${R}${R}${R}${R}`,
-    `${R}${R}${K}${R}${R}${R}${R}${G}${G}${R}${R}${R}${R}${K}${R}${R}`,
-    `${K}${K}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${K}${K}`,
-    `${K}${K}${R}${R}${G}${G}${R}${R}${R}${R}${G}${G}${R}${R}${K}${K}`,
-    `${_}${_}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${_}${_}`,
-  ];
-}
-
 // ── Full banner (character + title) ─────────────────────────────────────────
 export function banner(): string {
-  const art = catArt();
+  // The banner used to draw its own 16x19 cat, a cruder variant of the mascot on
+  // the site and the prayer cards. Same art everywhere now: half-blocks render
+  // pawpe in 35 columns against the old grid's 32, for a lot more detail.
+  const art = renderHalfBlocks(pawpe);
+  const artW = artWidth(pawpe);
   const title = [
     '',
     C.gold(chalk.bold('  ✝  Pawpe Miau  ✝')),
@@ -77,14 +43,23 @@ export function banner(): string {
     C.dim('  Type  cath <command> --help  for command details'),
   ];
 
-  const lines: string[] = [];
-  const maxArt = art.length;
-  const maxTitle = title.length;
-  const max = Math.max(maxArt, maxTitle);
+  const titleW = title.reduce((w, l) => Math.max(w, visLen(l)), 0);
+  const cols = process.stdout.columns ?? 80;
 
+  // Side by side needs the art and the widest tutorial line to both fit. They
+  // never did: this banner has been running 82 columns against an 80-column
+  // terminal and wrapping into a mess. Stack when there isn't room.
+  if (cols < artW + titleW) {
+    return [...art, ...title].join('\n');
+  }
+
+  const lines: string[] = [];
+  const max = Math.max(art.length, title.length);
   for (let i = 0; i < max; i++) {
-    const left  = (art[i]   ?? '').padEnd(0);
-    const right = (title[i] ?? '');
+    // padEnd(0) was a no-op here: any title line past the end of the art would
+    // have slid back to column zero instead of clearing it.
+    const left  = art[i] ?? ' '.repeat(artW);
+    const right = title[i] ?? '';
     lines.push(left + right);
   }
 

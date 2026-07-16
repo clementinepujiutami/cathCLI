@@ -4,12 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.spinnerStyle = exports.C = void 0;
-exports.catArt = catArt;
 exports.banner = banner;
 exports.sectionHeader = sectionHeader;
 exports.verseBox = verseBox;
 exports.prayerBox = prayerBox;
 const chalk_1 = __importDefault(require("chalk"));
+const render_1 = require("./render");
+const pawpe_1 = require("./figures/pawpe");
 // ── Color palette (from pixel art reference) ────────────────────────────────
 exports.C = {
     sky: (s) => chalk_1.default.hex('#87BEEA')(s),
@@ -22,46 +23,13 @@ exports.C = {
     dim: (s) => chalk_1.default.gray(s),
     bold: (s) => chalk_1.default.bold(s),
 };
-// ── Pixel-art mascot: Pawpe Miau (cath = cat-holic) ─────────────────────────
-// Each "pixel" = 2 terminal chars wide for square proportions
-function px(color) {
-    return color('██');
-}
-const _ = '  '; // empty pixel (1 unit)
-const K = px(exports.C.skin); // orange tabby fur
-const M = px(exports.C.cream); // bishop mitre
-const G = px(exports.C.gold); // gold trim
-const R = px(exports.C.red); // red vestments
-const Ey = px(exports.C.sky); // sky-blue eyes
-const Ns = px(exports.C.gold); // gold nose
-const Ie = px(exports.C.brown); // tabby stripes / inner detail
-const W = px(exports.C.white); // collar
-function catArt() {
-    return [
-        `${_}${_}${_}${_}${_}${_}${_}${M}${M}${_}${_}${_}${_}${_}${_}${_}`,
-        `${_}${_}${_}${_}${_}${_}${M}${M}${M}${M}${_}${_}${_}${_}${_}${_}`,
-        `${_}${_}${_}${_}${_}${M}${M}${G}${G}${M}${M}${_}${_}${_}${_}${_}`,
-        `${_}${_}${_}${_}${M}${M}${G}${G}${G}${G}${M}${M}${_}${_}${_}${_}`,
-        `${_}${_}${_}${M}${M}${G}${M}${G}${G}${M}${G}${M}${M}${_}${_}${_}`,
-        `${_}${_}${M}${M}${M}${M}${M}${M}${M}${M}${M}${M}${M}${M}${_}${_}`,
-        `${_}${_}${G}${G}${G}${G}${G}${G}${G}${G}${G}${G}${G}${G}${_}${_}`,
-        `${_}${K}${K}${Ie}${Ie}${K}${K}${K}${K}${K}${K}${Ie}${Ie}${K}${K}${_}`,
-        `${K}${K}${K}${Ie}${K}${K}${K}${K}${K}${K}${K}${K}${Ie}${K}${K}${K}`,
-        `${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}`,
-        `${K}${K}${K}${Ey}${K}${K}${K}${K}${K}${K}${K}${Ey}${K}${K}${K}${K}`,
-        `${K}${K}${K}${K}${K}${K}${Ns}${Ns}${K}${K}${K}${K}${K}${K}${K}${K}`,
-        `${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}`,
-        `${_}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${K}${_}`,
-        `${R}${R}${R}${R}${R}${W}${W}${W}${W}${W}${W}${R}${R}${R}${R}${R}`,
-        `${R}${R}${K}${R}${R}${R}${R}${G}${G}${R}${R}${R}${R}${K}${R}${R}`,
-        `${K}${K}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${K}${K}`,
-        `${K}${K}${R}${R}${G}${G}${R}${R}${R}${R}${G}${G}${R}${R}${K}${K}`,
-        `${_}${_}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${R}${_}${_}`,
-    ];
-}
 // ── Full banner (character + title) ─────────────────────────────────────────
 function banner() {
-    const art = catArt();
+    // The banner used to draw its own 16x19 cat, a cruder variant of the mascot on
+    // the site and the prayer cards. Same art everywhere now: half-blocks render
+    // pawpe in 35 columns against the old grid's 32, for a lot more detail.
+    const art = (0, render_1.renderHalfBlocks)(pawpe_1.pawpe);
+    const artW = (0, render_1.artWidth)(pawpe_1.pawpe);
     const title = [
         '',
         exports.C.gold(chalk_1.default.bold('  ✝  Pawpe Miau  ✝')),
@@ -82,13 +50,21 @@ function banner() {
         '',
         exports.C.dim('  Type  cath <command> --help  for command details'),
     ];
+    const titleW = title.reduce((w, l) => Math.max(w, visLen(l)), 0);
+    const cols = process.stdout.columns ?? 80;
+    // Side by side needs the art and the widest tutorial line to both fit. They
+    // never did: this banner has been running 82 columns against an 80-column
+    // terminal and wrapping into a mess. Stack when there isn't room.
+    if (cols < artW + titleW) {
+        return [...art, ...title].join('\n');
+    }
     const lines = [];
-    const maxArt = art.length;
-    const maxTitle = title.length;
-    const max = Math.max(maxArt, maxTitle);
+    const max = Math.max(art.length, title.length);
     for (let i = 0; i < max; i++) {
-        const left = (art[i] ?? '').padEnd(0);
-        const right = (title[i] ?? '');
+        // padEnd(0) was a no-op here: any title line past the end of the art would
+        // have slid back to column zero instead of clearing it.
+        const left = art[i] ?? ' '.repeat(artW);
+        const right = title[i] ?? '';
         lines.push(left + right);
     }
     return lines.join('\n');
