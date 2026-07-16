@@ -10,6 +10,10 @@ import { registerVerse } from './cmd/verse';
 import { registerPray } from './cmd/pray';
 import { registerRandom } from './cmd/random';
 import { registerSearch } from './cmd/search';
+import { registerSaints } from './cmd/saints';
+import { registerFeasts } from './cmd/feasts';
+import { registerBless } from './cmd/bless';
+import { registerSleep } from './cmd/sleep';
 
 const program = new Command();
 
@@ -34,6 +38,10 @@ registerVerse(program);
 registerPray(program);
 registerRandom(program);
 registerSearch(program);
+registerSaints(program);
+registerFeasts(program);
+registerBless(program);
+registerSleep(program);
 
 if (process.argv.length <= 2) {
   soundStartup();

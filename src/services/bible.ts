@@ -133,6 +133,25 @@ const POOL = [
   '1Pe5:7',   'Mt28:20',  'Col3:23',  'Heb11:1',  'Jn11:25',
 ];
 
+/**
+ * The same verse all day, a different one tomorrow. Seeded off the date rather
+ * than random so a blessing can be shared and compared: everyone gets the same
+ * one on the same day, offline included.
+ */
+export async function getVerseOfDay(date = new Date()): Promise<BibleVerse> {
+  const seed = date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
+  const query = POOL[seed % POOL.length];
+  try {
+    const results = await bibleget(query);
+    if (!results.length) throw new Error('Could not fetch the verse of the day');
+    return toVerse(results[0]);
+  } catch {
+    const cached = cache.getAnyVerse();
+    if (cached) return cached as BibleVerse;
+    throw new Error('Unable to fetch a verse. Please check your internet connection.');
+  }
+}
+
 export async function getRandomVerse(): Promise<BibleVerse> {
   const query = POOL[Math.floor(Math.random() * POOL.length)];
   try {

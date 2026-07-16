@@ -12,6 +12,10 @@ const verse_1 = require("./cmd/verse");
 const pray_1 = require("./cmd/pray");
 const random_1 = require("./cmd/random");
 const search_1 = require("./cmd/search");
+const saints_1 = require("./cmd/saints");
+const feasts_1 = require("./cmd/feasts");
+const bless_1 = require("./cmd/bless");
+const sleep_1 = require("./cmd/sleep");
 const program = new commander_1.Command();
 // Read the real version rather than a literal: the hardcoded one sat at 1.0.0
 // for two releases and made `cath --version` useless for telling builds apart.
@@ -33,6 +37,10 @@ program
 (0, pray_1.registerPray)(program);
 (0, random_1.registerRandom)(program);
 (0, search_1.registerSearch)(program);
+(0, saints_1.registerSaints)(program);
+(0, feasts_1.registerFeasts)(program);
+(0, bless_1.registerBless)(program);
+(0, sleep_1.registerSleep)(program);
 if (process.argv.length <= 2) {
     (0, sound_1.soundStartup)();
     console.log((0, art_1.banner)());

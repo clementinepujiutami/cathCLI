@@ -33,6 +33,11 @@ try {
       text TEXT NOT NULL,
       at   INTEGER NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS litcal (
+      year INTEGER PRIMARY KEY,
+      data TEXT NOT NULL,
+      at   INTEGER NOT NULL
+    );
   `);
 } catch {
   // Native module not compiled — caching disabled, API fetched every time
@@ -95,6 +100,19 @@ export const cache = {
     if (!db) return null;
     const row = db.prepare('SELECT data FROM verses ORDER BY RANDOM() LIMIT 1').get() as any;
     return row ? JSON.parse(row.data) : null;
+  },
+
+  // A liturgical year is fixed once published, so it outlives the 30-day TTL
+  // that suits scripture text. Only the current year is worth re-checking.
+  getLitCal: (year: number) => {
+    if (!db) return null;
+    const row = db.prepare('SELECT data FROM litcal WHERE year=?').get(year) as any;
+    return row ? JSON.parse(row.data) : null;
+  },
+  setLitCal: (year: number, data: unknown) => {
+    if (!db) return;
+    db.prepare('INSERT OR REPLACE INTO litcal(year,data,at) VALUES(?,?,?)')
+      .run(year, JSON.stringify(data), Date.now());
   },
 };
 
